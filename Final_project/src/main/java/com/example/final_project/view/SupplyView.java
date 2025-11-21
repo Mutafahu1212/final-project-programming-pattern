@@ -1,11 +1,15 @@
 package com.example.final_project.view;
 
 import com.example.final_project.controllers.SupplyController;
+import com.example.final_project.factories.PaneFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import com.example.final_project.models.Supply;
 
@@ -13,14 +17,17 @@ public class SupplyView extends VBox {
 private final TableView<Supply> tableView;
 private final SupplyController controller;
 
+
+
     public SupplyView(SupplyController controller) {
         this.tableView = new TableView<>();
         this.controller = controller;
         this.createTable();
         this.bindTableData();
         this.getChildren().add(tableView);
-        this.delete();
         this.addSupplyElement();
+        this.delete();
+
     }
 
 
@@ -44,8 +51,8 @@ private final SupplyController controller;
     }
 
     public void delete(){
+        Button deleteBtn = PaneFactory.createButton("Delete");
 
-        Button deleteBtn = new Button("Delete");
 
 
         this.getChildren().add(deleteBtn);
@@ -57,12 +64,16 @@ private final SupplyController controller;
         });
     }
     public void addSupplyElement(){
-        TextField idField = new TextField();
-        TextField nameField = new TextField();
-        TextField costField = new TextField();
-        Button addBtn = new Button("Add Supply");
-        this.getChildren().addAll(idField,nameField,costField);
-        this.getChildren().add(addBtn);
+        TextField idField = PaneFactory.createTextField("id ");
+        TextField nameField = PaneFactory.createTextField("name");
+        TextField costField = PaneFactory.createTextField("cost");
+        Button addBtn =PaneFactory.createButton("Add Supply");
+        HBox hBox = PaneFactory.createHBox(3,idField ,nameField,costField,addBtn
+        );
+
+
+        this.getChildren().add(hBox);
+
         addBtn.setOnAction(event ->{
 
             controller.addNewSupply(Integer.parseInt(idField.getText()),
