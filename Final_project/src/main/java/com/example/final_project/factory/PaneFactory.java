@@ -1,10 +1,9 @@
-package com.example.final_project.factories;
+package com.example.final_project.factory;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 public class PaneFactory {
 

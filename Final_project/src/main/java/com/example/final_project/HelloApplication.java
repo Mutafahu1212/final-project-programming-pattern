@@ -20,6 +20,7 @@ public class HelloApplication extends Application {
         stage.setTitle("Supply Table");
         stage.setScene(scene);
         stage.show();
+        controller.SupplyTotal();
     }
 
     public static void main(String[] args) {

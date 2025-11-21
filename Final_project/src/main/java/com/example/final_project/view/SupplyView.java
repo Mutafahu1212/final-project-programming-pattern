@@ -1,9 +1,7 @@
 package com.example.final_project.view;
 
 import com.example.final_project.controllers.SupplyController;
-import com.example.final_project.factories.PaneFactory;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.final_project.factory.PaneFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

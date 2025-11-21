@@ -65,11 +65,11 @@ public class Supply {
         String sql = "INSERT INTO supply (SupplyId, SupplyName, SupplyCost) VALUES (?, ?, ?)";
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);          // first '?'
-            stmt.setString(2, name);     // second '?'
-            stmt.setDouble(3, cost);     // third '?'
+            stmt.setInt(1, id);
+            stmt.setString(2, name);
+            stmt.setDouble(3, cost);
             int rows = stmt.executeUpdate();
-            return rows > 0;             // true if inserted successfully
+            return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
