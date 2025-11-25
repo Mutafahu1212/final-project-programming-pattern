@@ -1,0 +1,33 @@
+package com.example.final_project.view;
+
+import com.example.final_project.factory.PaneFactory;
+import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+public class FinanceView extends VBox {
+
+
+
+    public FinanceView(){
+        this.financeTools();
+    }
+    public  void financeTools(){
+        TextField RevenueTf = PaneFactory.createTextField("Revenue");
+        TextField CostTf = PaneFactory.createTextFieldUneditable("Cost");
+        TextField profitTf = PaneFactory.createTextFieldUneditable("profit");
+        this.getChildren().add(RevenueTf);
+
+        VBox financeBox = PaneFactory.createVBox(40,RevenueTf, CostTf, profitTf);
+        financeBox.setFillWidth(false);
+        financeBox.setAlignment(Pos.CENTER);
+        this.getChildren().add(financeBox);
+
+    }
+
+
+
+
+
+}

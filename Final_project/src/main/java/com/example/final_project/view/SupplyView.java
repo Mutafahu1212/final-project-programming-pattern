@@ -17,6 +17,8 @@ private final SupplyController controller;
 
 
 
+
+
     public SupplyView(SupplyController controller) {
         this.tableView = new TableView<>();
         this.controller = controller;
@@ -27,6 +29,7 @@ private final SupplyController controller;
         this.delete();
 
     }
+
 
 
     public void createTable(){

@@ -1,6 +1,9 @@
 package com.example.final_project;
 
+import com.example.final_project.controllers.EmployeeController;
 import com.example.final_project.controllers.SupplyController;
+import com.example.final_project.view.EmployeeView;
+import com.example.final_project.view.FinanceView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +24,22 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
         controller.SupplyTotal();
+
+        FinanceView  financeView = new FinanceView();
+        Scene financeScene = new Scene(financeView,500,300);
+        Stage financeStage = new Stage();
+        financeStage.setTitle("Finance");
+        financeStage.setScene(financeScene);
+        financeStage.show();
+
+        /*EmployeeController employeeController = new EmployeeController();
+        EmployeeView employeeView = new EmployeeView(employeeController);
+        Scene employeeScene = new Scene(employeeView, 500, 500);
+        Stage employeeStage = new Stage();
+        employeeStage.setScene(employeeScene);
+        employeeStage.show();*/
+
+
     }
 
     public static void main(String[] args) {
