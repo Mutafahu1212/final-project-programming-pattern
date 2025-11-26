@@ -2,10 +2,9 @@ package com.example.final_project.view;
 
 import com.example.final_project.controllers.SupplyController;
 import com.example.final_project.factory.PaneFactory;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,11 +21,13 @@ private final SupplyController controller;
     public SupplyView(SupplyController controller) {
         this.tableView = new TableView<>();
         this.controller = controller;
+        this.createSearchBar();
         this.createTable();
         this.bindTableData();
         this.getChildren().add(tableView);
         this.addSupplyElement();
         this.delete();
+
 
     }
 
@@ -83,5 +84,34 @@ private final SupplyController controller;
         });
 
 
+    }
+    private void createSearchBar(){
+        Label searchlabel = new Label("Supply Name");
+        this.getChildren().add(searchlabel);
+
+        TextField searchTextField = new TextField();
+        this.getChildren().add(searchTextField);
+
+        Button searchBtn = new Button("Search");
+        HBox searchbox = new HBox(10);
+        searchbox.getChildren().addAll(searchlabel,searchTextField, searchBtn);
+        this.getChildren().add(searchbox);
+
+        searchBtn.setOnAction(event ->{
+            String firstName = searchTextField.getText();
+            if (firstName == null) firstName = "";
+
+            ObservableList<Supply> searchFirstName = FXCollections.observableArrayList();
+
+            for (Supply s : controller.getSupply()) {
+                String empName = String.valueOf(s.supplyNameProperty().get());
+                if (empName.equalsIgnoreCase(firstName)) {
+                    searchFirstName.add(s);
+                    tableView.setItems(searchFirstName);
+                    break;
+                }
+                tableView.setItems(controller.getSupply());
+            }
+        });
     }
 }
