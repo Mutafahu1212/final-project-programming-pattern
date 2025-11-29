@@ -23,7 +23,7 @@ public class HelloApplication extends Application {
         stage.setTitle("Supply Table");
         stage.setScene(scene);
         stage.show();
-        controller.SupplyTotal();
+//        controller.SupplyTotal();
 
         FinanceView  financeView = new FinanceView();
         Scene financeScene = new Scene(financeView,500,300);

@@ -8,11 +8,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Supply {
     private final IntegerProperty supplyId;
     private final StringProperty supplyName;
     private final DoubleProperty supplyCost;
+
+
 
 
     public Supply(int supplyId, String supplyName, double supplyCost){
@@ -31,8 +34,8 @@ public class Supply {
     }
 
 
-    public  static ObservableList<Supply> getSupply(){
-        ObservableList<Supply> supplyData = FXCollections.observableArrayList();
+    public  static List<Supply> getSupply(){
+        List<Supply> supplyData = FXCollections.observableArrayList();
         String query = "Select SupplyId, SupplyName, SupplyCost from supply";
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -41,6 +44,7 @@ public class Supply {
                 int supplyId = rs.getInt("SupplyId");
                 String supplyName = rs.getString("SupplyName");
                 double supplyCost = rs.getDouble("SupplyCost");
+
                 supplyData.add(new Supply(supplyId, supplyName, supplyCost));
             }
         } catch (SQLException e) {

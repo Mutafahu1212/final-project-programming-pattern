@@ -77,7 +77,6 @@ private final SupplyController controller;
         this.getChildren().add(hBox);
 
         addBtn.setOnAction(event ->{
-
             controller.addNewSupply(Integer.parseInt(idField.getText()),
                     nameField.getText(),
                     Double.parseDouble(costField.getText()));
