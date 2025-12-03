@@ -25,8 +25,9 @@ private final ItemController controller;
         this.createTable();
         this.bindTableData();
         this.getChildren().add(tableView);
-        this.addSupplyElement();
+        this.addItemElement();
         this.delete();
+
 
 
     }
@@ -53,19 +54,25 @@ private final ItemController controller;
     }
 
     public void delete(){
+
         Button deleteBtn = PaneFactory.createButton("Delete");
 
-
-
         this.getChildren().add(deleteBtn);
-
-
         deleteBtn.setOnAction(event->{
+
             int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
             Item.deleteItem(selectedId);
+            controller.removeItem(selectedId);
+
+
+
+
+            //boolean selectedId = tableView.getSelectionModel().getSelectedItem();
+
+
         });
     }
-    public void addSupplyElement(){
+    public void addItemElement(){
         TextField idField = PaneFactory.createTextField("id ");
         TextField nameField = PaneFactory.createTextField("name");
         TextField costField = PaneFactory.createTextField("cost");
@@ -81,8 +88,6 @@ private final ItemController controller;
                     nameField.getText(),
                     Double.parseDouble(costField.getText()));
         });
-
-
     }
     private void createSearchBar(){
         Label searchlabel = new Label("Item Name");
