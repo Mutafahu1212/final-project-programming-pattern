@@ -1,25 +1,25 @@
 package com.example.final_project.view;
 
 import com.example.final_project.controllers.EmployeeController;
-import com.example.final_project.controllers.SupplyController;
+import com.example.final_project.controllers.FinanceController;
+import com.example.final_project.controllers.ItemController;
 import com.example.final_project.factory.PaneFactory;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class MenuView extends VBox {
     private final EmployeeController employeeController;
-    private final SupplyController supplyController;
+    private final ItemController itemController;
 
-    public MenuView(EmployeeController employeeController, SupplyController supplyController){
+
+    public MenuView(EmployeeController employeeController, ItemController itemController){
         this.employeeController = employeeController;
-        this.supplyController = supplyController;
+        this.itemController = itemController;
         this.employeeButton();
-        this.supplyButton();
+        this.itemButton();
         this.fianceButton();
         this.exitButton();
     }
@@ -42,14 +42,14 @@ public class MenuView extends VBox {
         );
     }
 
-    public void supplyButton(){
-        Button supplyButton = PaneFactory.createButton("Supply Info");
+    public void itemButton(){
+        Button supplyButton = PaneFactory.createButton("Item Info");
         this.getChildren().add(supplyButton);
 
         supplyButton.setOnAction(
                 event->{
                     Scene scene = supplyButton.getScene();
-                    scene.setRoot(new SupplyView(supplyController));
+                    scene.setRoot(new ItemView(itemController));
                 }
         );
     }
@@ -57,5 +57,10 @@ public class MenuView extends VBox {
     public void fianceButton(){
         Button financeButton = PaneFactory.createButton("Finance");
         this.getChildren().add(financeButton);
+
+        financeButton.setOnAction(event ->{
+            Scene scene = financeButton.getScene();
+            scene.setRoot(new FinanceView());
+        });
     }
 }

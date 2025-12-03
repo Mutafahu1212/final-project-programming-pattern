@@ -1,20 +1,16 @@
 package com.example.final_project.controllers;
 
-import com.example.final_project.view.EmployeeView;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import com.example.final_project.models.Supply;
+import com.example.final_project.models.Item;
 import javafx.scene.control.TableView;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class SupplyController {
-    private final ObservableList<Supply> supplyList = FXCollections.observableArrayList();
-    private TableView<Supply> table;
+public class ItemController {
+    private final ObservableList<Item> itemList = FXCollections.observableArrayList();
+    private TableView<Item> table;
     Queue<Double> queue = new LinkedList<>();
     int id;
 
@@ -28,32 +24,32 @@ public class SupplyController {
 //        System.out.println(queue);
 //    }
 
-    public SupplyController(){
-        supplyList.addAll(Supply.getSupply());
+    public ItemController(){
+        itemList.addAll(Item.getItem());
     }
 
-    public ObservableList<Supply> getSupply(){
+    public ObservableList<Item> getItem(){
         System.out.println("i receave the supply");
-        return supplyList;
+        return itemList;
     }
-    public boolean removeSupply(int id){
-        Supply newSupply = new Supply(id, "deete", 0);
-        supplyList.add(newSupply);
-        return Supply.deleteSupply(id);
+    public boolean removeItem(int id){
+        Item newItem = new Item(id, "deete", 0);
+        itemList.add(newItem);
+        return Item.deleteItem(id);
     }
 
 
-    public boolean addNewSupply(int id, String name, double cost) {
+    public boolean addNewItem(int id, String name, double cost) {
 
 
-        Supply s = new Supply(id, name, cost);
+        Item s = new Item(id, name, cost);
 
 
 
 
-        supplyList.add(s);
+        itemList.add(s);
         System.out.println("I added the supply");
-        return Supply.addSupply(id, name, cost);
+        return Item.addItem(id, name, cost);
     }
 
 
