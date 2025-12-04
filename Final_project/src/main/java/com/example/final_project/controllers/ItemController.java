@@ -14,7 +14,7 @@ public class ItemController {
     //private TableView<Item> table;
     //Queue<Item> queue = new LinkedList<>();
 
-    int id;
+    //int id;
 
 //    public void SupplyTotal(){
 //        for (Supply s : list){

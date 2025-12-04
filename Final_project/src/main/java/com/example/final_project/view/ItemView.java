@@ -25,8 +25,8 @@ private final ItemController controller;
         this.createTable();
         this.bindTableData();
         this.getChildren().add(tableView);
-        this.addItemElement();
-        this.delete();
+        this.addAndDeleteItemsElement();
+        //this.delete();
 
 
 
@@ -53,7 +53,26 @@ private final ItemController controller;
 
     }
 
-    public void delete(){
+//    public void delete(){
+//
+//        Button deleteBtn = PaneFactory.createButton("Delete");
+//
+//        this.getChildren().add(deleteBtn);
+//        deleteBtn.setOnAction(event->{
+//
+//            int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
+//            Item.deleteItem(selectedId);
+//            controller.removeItem(selectedId);
+//
+//
+//
+//
+//            //boolean selectedId = tableView.getSelectionModel().getSelectedItem();
+//
+//
+//        });
+//    }
+    public void addAndDeleteItemsElement(){
 
         Button deleteBtn = PaneFactory.createButton("Delete");
 
@@ -71,13 +90,11 @@ private final ItemController controller;
 
 
         });
-    }
-    public void addItemElement(){
         //TextField idField = PaneFactory.createTextField("id ");
         TextField nameField = PaneFactory.createTextField("name");
         TextField costField = PaneFactory.createTextField("cost");
         Button addBtn =PaneFactory.createButton("Add Item");
-        HBox hBox = PaneFactory.createHBox(3,nameField,costField,addBtn
+        HBox hBox = PaneFactory.createHBox(3,nameField,costField,addBtn, deleteBtn
         );
 
 
@@ -88,7 +105,9 @@ private final ItemController controller;
                     nameField.getText(),
                     Double.parseDouble(costField.getText()));
         });
+
     }
+
     private void createSearchBar(){
         Label searchlabel = new Label("Item Name");
         this.getChildren().add(searchlabel);

@@ -29,6 +29,10 @@ public class Item {
         this.itemName = new SimpleStringProperty();
         this.itemCost = new SimpleDoubleProperty();
     }
+
+    public static void deleteItem(int selectedId) {
+    }
+
     public IntegerProperty itemIdProperty(){
         return itemId;
     }
@@ -83,18 +87,18 @@ public class Item {
         }
         return itemData;
     }
-    public static boolean deleteItem(int id) {
-        String sql = "DELETE FROM item WHERE itemId = ?";
-        try (Connection conn = database.ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            int rows = stmt.executeUpdate();
-            return rows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public static boolean deleteItem(int id) {
+//        String sql = "DELETE FROM item WHERE itemId = ?";
+//        try (Connection conn = database.ConnectionManager.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(sql)) {
+//            stmt.setInt(1, id);
+//            int rows = stmt.executeUpdate();
+//            return rows > 0;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     public static boolean addItem( String name, double cost) {
         String sql = "INSERT INTO item ( itemName, itemCost) VALUES (?, ?)";
