@@ -13,11 +13,13 @@ import javafx.scene.layout.VBox;
 public class MenuView extends VBox {
     private final EmployeeController employeeController;
     private final ItemController itemController;
+    private final FinanceController financeController;
 
 
-    public MenuView(EmployeeController employeeController, ItemController itemController){
+    public MenuView(EmployeeController employeeController, ItemController itemController, FinanceController financeController){
         this.employeeController = employeeController;
         this.itemController = itemController;
+        this.financeController = financeController;
         this.employeeButton();
         this.itemButton();
         this.fianceButton();
@@ -60,7 +62,7 @@ public class MenuView extends VBox {
 
         financeButton.setOnAction(event ->{
             Scene scene = financeButton.getScene();
-            scene.setRoot(new FinanceView());
+            scene.setRoot(new FinanceView(financeController));
         });
     }
 }
