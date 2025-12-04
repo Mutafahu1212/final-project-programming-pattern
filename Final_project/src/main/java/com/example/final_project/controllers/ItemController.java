@@ -1,11 +1,16 @@
 package com.example.final_project.controllers;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.example.final_project.models.Item;
 
+import java.sql.Timestamp;
+
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
+    private ObjectProperty<Timestamp> itemDate = new SimpleObjectProperty<>();
     //private TableView<Item> table;
     //Queue<Item> queue = new LinkedList<>();
 
@@ -33,6 +38,7 @@ public class ItemController {
         return itemList;
     }
     public boolean removeItem(int codeBar){
+        Item.deleteItem(codeBar);
         //Item newItem = new Item(id, "deete", 0);
         //itemList.add(newItem);
         //return Item.deleteItem(id);
@@ -44,17 +50,27 @@ public class ItemController {
                 itemList.remove(i);
             }
 
+
         }
+
         return true;
     }
 
 
-    public boolean addNewItem( String name, double cost) {
-         int generateCodeBar = Item.addItemElements(name, cost);
-         Item item= new Item(generateCodeBar, name, cost);
-         itemList.add(item);
-         return true;
+    public boolean addNewItem(String name, double cost) {
+        Item newItem = Item.addAndGetItem(name, cost); // returns Item with timestamp from DB
 
+            itemList.add(newItem); // TableView will display cost and date correctly
+            return true;
+
+    }
+
+//    public boolean addNewItem( String name, double cost) {
+//         int generateCodeBar = Item.addItemAndGetCodebar(name, cost);
+//         Item item= new Item(generateCodeBar, name, cost, this.itemDate.get());
+//         itemList.add(item);
+//         return true;
+//    }
 
 //        Item codebar = new Item();
 //        int code = codebar.itemIdProperty().get();
@@ -74,7 +90,7 @@ public class ItemController {
 //        return true;
 
 
-    }
+
 
 
 

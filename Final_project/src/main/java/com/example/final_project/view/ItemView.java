@@ -10,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import com.example.final_project.models.Item;
 
+import java.sql.Timestamp;
+
 public class ItemView extends VBox {
 private final TableView<Item> tableView;
 private final ItemController controller;
@@ -44,7 +46,10 @@ private final ItemController controller;
         TableColumn<Item, Double> itemCostCol = new TableColumn<>("Item Cost");
         itemCostCol.setCellValueFactory(new PropertyValueFactory<>("itemCost"));
 
-        tableView.getColumns().addAll(itemIdCol,itemNameCol,itemCostCol);
+        TableColumn<Item, Timestamp> itemDateCol = new TableColumn<>("Item Date");
+        itemDateCol.setCellValueFactory(new PropertyValueFactory<>("itemDate"));
+
+        tableView.getColumns().addAll(itemIdCol,itemNameCol,itemCostCol, itemDateCol);
 
 
         }
