@@ -73,18 +73,18 @@ private final ItemController controller;
         });
     }
     public void addItemElement(){
-        TextField idField = PaneFactory.createTextField("id ");
+        //TextField idField = PaneFactory.createTextField("id ");
         TextField nameField = PaneFactory.createTextField("name");
         TextField costField = PaneFactory.createTextField("cost");
         Button addBtn =PaneFactory.createButton("Add Item");
-        HBox hBox = PaneFactory.createHBox(3,idField ,nameField,costField,addBtn
+        HBox hBox = PaneFactory.createHBox(3,nameField,costField,addBtn
         );
 
 
         this.getChildren().add(hBox);
 
         addBtn.setOnAction(event ->{
-            controller.addNewItem(Integer.parseInt(idField.getText()),
+            controller.addNewItem(
                     nameField.getText(),
                     Double.parseDouble(costField.getText()));
         });

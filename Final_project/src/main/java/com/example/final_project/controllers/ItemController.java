@@ -11,8 +11,9 @@ import java.util.Queue;
 
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private TableView<Item> table;
-    Queue<Double> queue = new LinkedList<>();
+    //private TableView<Item> table;
+    //Queue<Item> queue = new LinkedList<>();
+
     int id;
 
 //    public void SupplyTotal(){
@@ -24,6 +25,8 @@ public class ItemController {
 //        }
 //        System.out.println(queue);
 //    }
+
+
 
     public ItemController(){
         itemList.addAll(Item.getItem());
@@ -51,13 +54,31 @@ public class ItemController {
     }
 
 
-    public boolean addNewItem(int id, String name, double cost) {
+    public boolean addNewItem( String name, double cost) {
+         int generateCodeBar = Item.addItemAndGetBarcode(name, cost);
+         Item item= new Item(generateCodeBar, name, cost);
+         itemList.add(item);
+         return true;
 
-        Item s = new Item(id, name, cost);
 
-        itemList.add(s);
-        System.out.println("I added the supply");
-        return Item.addItem(id, name, cost);
+//        Item codebar = new Item();
+//        int code = codebar.itemIdProperty().get();
+//        Item s = new Item(name, cost);
+//        for (int i = 0; i<itemList.size(); i++){
+//
+//        }
+//
+//
+//
+//        itemList.add(itemList.get(itemList.size()-1));
+//        System.out.println("I added the supply");
+//        return Item.addItem(name, cost);
+//        Item item = new Item();
+//        item.addItemWithBarcode(name, cost);
+//        itemList.add(item);
+//        return true;
+
+
     }
 
 

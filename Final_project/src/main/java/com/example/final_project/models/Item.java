@@ -3,10 +3,7 @@ package com.example.final_project.models;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class Item {
@@ -17,10 +14,20 @@ public class Item {
 
 
 
-    public Item(int itemId, String itemName, double itemCost){
+    public Item( String itemName, double itemCost) {
+        this.itemId = new SimpleIntegerProperty();
+        this.itemName = new SimpleStringProperty(itemName);
+        this.itemCost = new SimpleDoubleProperty(itemCost);
+    }
+    public Item( int itemId, String itemName, double itemCost) {
         this.itemId = new SimpleIntegerProperty(itemId);
         this.itemName = new SimpleStringProperty(itemName);
         this.itemCost = new SimpleDoubleProperty(itemCost);
+    }
+    public Item(){
+        this.itemId = new SimpleIntegerProperty();
+        this.itemName = new SimpleStringProperty();
+        this.itemCost = new SimpleDoubleProperty();
     }
     public IntegerProperty itemIdProperty(){
         return itemId;
@@ -31,8 +38,33 @@ public class Item {
     public DoubleProperty itemCostProperty(){
         return itemCost;
     }
+    public Item addItemWithBarcode(String name, double cost){
+        int generatedcode = Item.addItemAndGetBarcode(name, cost);
+        Item newItem = new Item(generatedcode, name, cost);
+        return newItem;
+    }
 
 
+    public static int addItemAndGetBarcode(String name, double cost) {
+        String sql = "INSERT INTO item (itemName, itemCost) VALUES (?, ?)";
+        try (Connection conn = database.ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, name);
+            stmt.setDouble(2, cost);
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return -1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
     public  static List<Item> getItem(){
         List<Item> itemData = FXCollections.observableArrayList();
         String query = "Select itemId, itemName, itemCost from item";
@@ -64,13 +96,13 @@ public class Item {
         }
     }
 
-    public static boolean addItem(int id, String name, double cost) {
-        String sql = "INSERT INTO item (itemId, itemName, itemCost) VALUES (?, ?, ?)";
+    public static boolean addItem( String name, double cost) {
+        String sql = "INSERT INTO item ( itemName, itemCost) VALUES (?, ?)";
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.setString(2, name);
-            stmt.setDouble(3, cost);
+            //stmt.setInt(1, id);
+            stmt.setString(1, name);
+            stmt.setDouble(2, cost);
             int rows = stmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
