@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import com.example.final_project.models.Item;
+import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
 
@@ -37,11 +38,14 @@ private final ItemController controller;
 
 
     public void createTable(){
-        TableColumn<Item, Integer> itemIdCol = new TableColumn<>("Item Id");
+        TableColumn<Item, Integer> itemIdCol = new TableColumn<>("Item Code");
         itemIdCol.setCellValueFactory(new PropertyValueFactory<>("itemId"));
 
         TableColumn<Item, String> itemNameCol = new TableColumn<>("Item Name");
         itemNameCol.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+
+        TableColumn<Item, Integer> itemQuantityCol = new TableColumn<>("Item Quantity");
+        itemQuantityCol.setCellValueFactory(new PropertyValueFactory<>("itemQuantity"));
 
         TableColumn<Item, Double> itemCostCol = new TableColumn<>("Item Cost");
         itemCostCol.setCellValueFactory(new PropertyValueFactory<>("itemCost"));
@@ -49,7 +53,7 @@ private final ItemController controller;
         TableColumn<Item, Timestamp> itemDateCol = new TableColumn<>("Item Date");
         itemDateCol.setCellValueFactory(new PropertyValueFactory<>("itemDate"));
 
-        tableView.getColumns().addAll(itemIdCol,itemNameCol,itemCostCol, itemDateCol);
+        tableView.getColumns().addAll(itemIdCol,itemNameCol,itemQuantityCol, itemCostCol, itemDateCol);
 
 
         }
@@ -58,25 +62,7 @@ private final ItemController controller;
 
     }
 
-//    public void delete(){
-//
-//        Button deleteBtn = PaneFactory.createButton("Delete");
-//
-//        this.getChildren().add(deleteBtn);
-//        deleteBtn.setOnAction(event->{
-//
-//            int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
-//            Item.deleteItem(selectedId);
-//            controller.removeItem(selectedId);
-//
-//
-//
-//
-//            //boolean selectedId = tableView.getSelectionModel().getSelectedItem();
-//
-//
-//        });
-//    }
+
     public void addAndDeleteItemsElement(){
 
         Button deleteBtn = PaneFactory.createButton("Delete");
@@ -97,9 +83,10 @@ private final ItemController controller;
         });
         //TextField idField = PaneFactory.createTextField("id ");
         TextField nameField = PaneFactory.createTextField("name");
+        TextField quantityField = PaneFactory.createTextField("quantity");
         TextField costField = PaneFactory.createTextField("cost");
         Button addBtn =PaneFactory.createButton("Add Item");
-        HBox hBox = PaneFactory.createHBox(3,nameField,costField,addBtn, deleteBtn
+        HBox hBox = PaneFactory.createHBox(3,nameField,quantityField,costField,addBtn, deleteBtn
         );
 
 
@@ -107,7 +94,7 @@ private final ItemController controller;
 
         addBtn.setOnAction(event ->{
             controller.addNewItem(
-                    nameField.getText(),
+                    nameField.getText(),Integer.parseInt(quantityField.getText()),
                     Double.parseDouble(costField.getText()));
         });
 

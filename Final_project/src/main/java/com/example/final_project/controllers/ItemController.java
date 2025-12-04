@@ -57,8 +57,8 @@ public class ItemController {
     }
 
 
-    public boolean addNewItem(String name, double cost) {
-        Item newItem = Item.addAndGetItem(name, cost); // returns Item with timestamp from DB
+    public boolean addNewItem(String name,int quantiy, double cost) {
+        Item newItem = Item.addAndGetItem(name,quantiy, cost ); // returns Item with timestamp from DB
 
             itemList.add(newItem); // TableView will display cost and date correctly
             return true;
