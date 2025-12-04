@@ -4,12 +4,19 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
+
+
 public class Item {
+
+
+
     private final IntegerProperty itemId;
     private final StringProperty itemName;
     private final DoubleProperty itemCost;
+    private final ObjectProperty<Timestamp> itemDate = new SimpleObjectProperty<>();
 
 
 
@@ -42,20 +49,29 @@ public class Item {
     public DoubleProperty itemCostProperty(){
         return itemCost;
     }
+    public ObjectProperty<Timestamp> itemDateProperty(){
+        return itemDate;
+    }
+
+
+
     public Item addItemWithBarcode(String name, double cost){
-        int generatedcode = Item.addItemAndGetBarcode(name, cost);
+        int generatedcode = Item.addItemElements(name, cost);
         Item newItem = new Item(generatedcode, name, cost);
         return newItem;
     }
 
 
-    public static int addItemAndGetBarcode(String name, double cost) {
-        String sql = "INSERT INTO item (itemName, itemCost) VALUES (?, ?)";
+    public static int addItemElements(String name, double cost) {
+        String sql = "INSERT INTO item (itemName, itemCost, itemDate) VALUES (?, ?, ?)";
+
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, name);
             stmt.setDouble(2, cost);
+            stmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now())); // save current datetime as Timestamp
+
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -71,12 +87,12 @@ public class Item {
     }
     public  static List<Item> getItem(){
         List<Item> itemData = FXCollections.observableArrayList();
-        String query = "Select itemId, itemName, itemCost from item";
+        String query = "Select itemBarCode, itemName, itemCost from item";
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while(rs.next()){
-                int supplyId = rs.getInt("itemId");
+                int supplyId = rs.getInt("itemBarCode");
                 String supplyName = rs.getString("itemName");
                 double supplyCost = rs.getDouble("itemCost");
 

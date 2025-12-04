@@ -1,13 +1,8 @@
 package com.example.final_project.controllers;
 
-import com.example.final_project.view.ItemView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.example.final_project.models.Item;
-import javafx.scene.control.TableView;
-
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
@@ -55,7 +50,7 @@ public class ItemController {
 
 
     public boolean addNewItem( String name, double cost) {
-         int generateCodeBar = Item.addItemAndGetBarcode(name, cost);
+         int generateCodeBar = Item.addItemElements(name, cost);
          Item item= new Item(generateCodeBar, name, cost);
          itemList.add(item);
          return true;
