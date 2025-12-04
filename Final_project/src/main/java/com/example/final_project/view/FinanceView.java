@@ -1,5 +1,6 @@
 package com.example.final_project.view;
 
+import com.example.final_project.controllers.FinanceController;
 import com.example.final_project.factory.PaneFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
@@ -10,7 +11,7 @@ public class FinanceView extends VBox {
 
 
 
-    public FinanceView(){
+    public FinanceView(FinanceController controller){
         this.financeTools();
     }
     public  void financeTools(){
