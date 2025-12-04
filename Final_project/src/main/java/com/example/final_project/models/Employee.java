@@ -26,6 +26,26 @@ public class Employee {
         this.hours_worked = new SimpleIntegerProperty(hours_worked);
     }
 
+    public int getId() {
+        return id.get();
+    }
+
+    public String getFirstName() {
+        return firstName.get();
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public double getSalary() {
+        return salary.get();
+    }
+
+    public int getHours_worked() {
+        return hours_worked.get();
+    }
+
     public IntegerProperty idProperty() {
         return id;
     }
@@ -44,6 +64,29 @@ public class Employee {
 
     public IntegerProperty hours_workedProperty() {
         return hours_worked;
+    }
+
+    public static boolean addEmployee(Employee employee) throws SQLException {
+        boolean result = false;
+        String sql = "Insert into Employee (id, firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?, ?)";
+
+        try(Connection conn = ConnectionManager.getConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);) {
+            pstm.setInt(1, employee.getId());
+            pstm.setString(2,employee.getFirstName());
+            pstm.setString(3, employee.getLastName());
+            pstm.setDouble(4,employee.getSalary());
+            pstm.setInt(5, employee.getHours_worked());
+
+            int rowInserted = pstm.executeUpdate();
+            if(rowInserted > 0){
+                result = true;
+            }
+        } catch (SQLException e) {
+            result = false;
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
     public static ObservableList<Employee> getAllEmployees(){
@@ -70,5 +113,46 @@ public class Employee {
 
         return employeeData;
     }
+
+    public static boolean updateEmployee(Employee employee){
+        boolean result = false;
+        String sql = "Update Employee Set firstName=?, lastName=?, salary=?, hoursWorked=? Where id=?";
+
+        try(Connection conn = ConnectionManager.getConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);) {
+            pstm.setInt(1, employee.getId());
+            pstm.setString(2,employee.getFirstName());
+            pstm.setString(3, employee.getLastName());
+            pstm.setDouble(4,employee.getSalary());
+            pstm.setInt(5, employee.getHours_worked());
+
+            int rowUpdated = pstm.executeUpdate();
+            if(rowUpdated > 0){
+                result = true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static boolean deleteEmployee(Employee employee){
+        boolean result = false;
+        String sql = "Delete from Employee Where id=?";
+
+        try(Connection conn = ConnectionManager.getConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);) {
+            pstm.setInt(1, employee.getId());
+
+            int rowDeleted = pstm.executeUpdate();
+            if(rowDeleted > 0){
+                result = true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
 }
 
