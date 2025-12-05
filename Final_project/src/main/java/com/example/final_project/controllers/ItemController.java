@@ -7,10 +7,21 @@ import javafx.collections.ObservableList;
 import com.example.final_project.models.Item;
 
 import java.sql.Timestamp;
+import java.util.logging.*;
 
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
-    private ObjectProperty<Timestamp> itemDate = new SimpleObjectProperty<>();
+    private static final Logger LOG = Logger.getLogger(ItemController.class.getName());
+    static{
+        LOG.setLevel(Level.ALL);
+
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.ALL); // show all levels in console
+        LOG.addHandler(handler);
+
+        LOG.setUseParentHandlers(false);
+    }
+    //private ObjectProperty<Timestamp> itemDate = new SimpleObjectProperty<>();
     //private TableView<Item> table;
     //Queue<Item> queue = new LinkedList<>();
 
@@ -34,7 +45,7 @@ public class ItemController {
     }
 
     public ObservableList<Item> getItem(){
-        System.out.println("i receave the supply");
+        //LOG.info("Connection successful Between the javaFx  and sql database");
         return itemList;
     }
     public boolean removeItem(int codeBar){
@@ -45,22 +56,18 @@ public class ItemController {
 
         //int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
         //Item.deleteItem(selectedId);
-        for (Item i : itemList) {
-            if (i.itemIdProperty().get() == codeBar) {
-                itemList.remove(i);
-            }
-
-
-        }
+        itemList.removeIf(i -> i.itemIdProperty().get() == codeBar);
+        LOG.info("Deleted item with codeBar: " + codeBar);
 
         return true;
     }
 
 
     public boolean addNewItem(String name,int quantiy, double cost) {
-        Item newItem = Item.addAndGetItem(name,quantiy, cost ); // returns Item with timestamp from DB
+        Item newItem = Item.addAndGetItem(name,quantiy, cost );
+        LOG.info("Add the item into sql database");
 
-            itemList.add(newItem); // TableView will display cost and date correctly
+            itemList.add(newItem); 
             return true;
 
     }
