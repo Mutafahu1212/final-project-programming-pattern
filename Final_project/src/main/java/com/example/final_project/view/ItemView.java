@@ -12,6 +12,7 @@ import com.example.final_project.models.Item;
 import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 
 public class ItemView extends VBox {
 private final TableView<Item> tableView;
@@ -112,21 +113,48 @@ private final ItemController controller;
         searchbox.getChildren().addAll(searchlabel,searchTextField, searchBtn);
         this.getChildren().add(searchbox);
 
-        searchBtn.setOnAction(event ->{
-            String firstName = searchTextField.getText();
-            if (firstName == null) firstName = "";
+        searchBtn.setOnAction(event -> {
+            ObservableList<Item> filtered =  null;
 
-            ObservableList<Item> searchFirstName = FXCollections.observableArrayList();
 
-            for (Item s : controller.getItem()) {
-                String empName = String.valueOf(s.itemNameProperty().get());
-                if (empName.equalsIgnoreCase(firstName)) {
-                    searchFirstName.add(s);
-                    tableView.setItems(searchFirstName);
-                    break;
-                }
-                tableView.setItems(controller.getItem());
+            try {
+                int input = Integer.parseInt(searchTextField.getText());
+                filtered = controller.getItem().stream()
+                        .filter(i-> i.itemIdProperty().get() == (input))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
             }
+            catch (NumberFormatException n) {
+                try {
+                    float input = Float.parseFloat(searchTextField.getText());
+                    filtered = controller.getItem().stream()
+                            .filter( f-> f.itemCostProperty().get() == (input))
+                            .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                }
+                catch (NumberFormatException nu){
+
+
+
+
+                        String input = searchTextField.getText();
+                        if (input == null) input = "";
+
+                        String finalFirstName = input;
+                        filtered = controller.getItem().stream()
+                                .filter(s -> s.itemNameProperty().get().contains(finalFirstName))
+                                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                    }
+
+
+
+
+
+            }
+
+
+
+
+            tableView.setItems(filtered);
         });
     }
 }
