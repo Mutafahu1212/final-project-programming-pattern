@@ -72,9 +72,9 @@ private final ItemController controller;
         this.getChildren().add(deleteBtn);
         deleteBtn.setOnAction(event->{
 
-            int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
-            Item.deleteItem(selectedId);
-            controller.removeItem(selectedId);
+            String selectedName = tableView.getSelectionModel().getSelectedItem().itemNameProperty().get();
+            Item.deleteItem(selectedName);
+            controller.removeItem(selectedName);
 
 
 

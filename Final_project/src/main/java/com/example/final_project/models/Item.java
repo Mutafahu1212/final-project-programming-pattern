@@ -188,11 +188,11 @@ public class Item {
 //        return allItems;
 //    }
 
-    public static boolean deleteItem(int id) {
-        String sql = "DELETE FROM item WHERE itemBarCode = ?";
+    public static boolean deleteItem(String name) {
+        String sql = "DELETE FROM item WHERE itemName = ?";
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setString(1, name);
             int rows = stmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {

@@ -62,11 +62,11 @@ public class ItemController {
         return itemList;
     }
 
-    public boolean removeItem(int codeBar) {
-        Item.deleteItem(codeBar);
+    public boolean removeItem(String name) {
+        Item.deleteItem(name);
 
-        itemList.removeIf(i -> i.itemIdProperty().get() == codeBar);
-        LOG.info("Deleted item with codeBar: " + codeBar);
+        itemList.removeIf(i -> i.itemNameProperty().get() == name);
+        LOG.info("Deleted item with codeBar: " + name);
 
         return true;
     }
