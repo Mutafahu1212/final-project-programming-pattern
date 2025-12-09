@@ -7,55 +7,64 @@ import javafx.collections.ObservableList;
 import com.example.final_project.models.Item;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.*;
+
+
+import static com.example.final_project.models.Item.searchItemByName;
 
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
     private static final Logger LOG = Logger.getLogger(ItemController.class.getName());
-    static{
+    private Map<String, Item> hashMapItems = new HashMap<>();
+
+    static {
         LOG.setLevel(Level.ALL);
 
         ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.ALL); // show all levels in console
+        handler.setLevel(Level.ALL);
         LOG.addHandler(handler);
 
         LOG.setUseParentHandlers(false);
     }
-    //private ObjectProperty<Timestamp> itemDate = new SimpleObjectProperty<>();
-    //private TableView<Item> table;
-    //Queue<Item> queue = new LinkedList<>();
-
-    //int id;
-
-//    public void SupplyTotal(){
-//        for (Supply s : list){
-//            System.out.println(s.supplyCostProperty());
-//            System.out.println(s.supplyIdProperty());
-//            System.out.println(s.supplyNameProperty());
-//            queue.add(s.supplyCostProperty().get());
-//        }
-//        System.out.println(queue);
-//    }
 
 
-
-    public ItemController(){
-        itemList.addAll(Item.getItem());
-
+    public ItemController() {
+        List<Item> items = Item.getItem(); // fetch all items from DB
+        for (Item item : items) {
+            String key = item.getItemName();
+            if (hashMapItems.containsKey(key)) {
+                Item existing = hashMapItems.get(key);
+                existing.setItemQuantity(existing.getItemQuantity() + item.getItemQuantity());
+            } else {
+                hashMapItems.put(key, item);
+            }
+        }
+        itemList.setAll(hashMapItems.values());
     }
 
-    public ObservableList<Item> getItem(){
-        //LOG.info("Connection successful Between the javaFx  and sql database");
+    public ObservableList<Item> searchItem(String firstName) {
+        if (firstName != null && !firstName.isEmpty()) {
+            // Filter items in the HashMap
+            List<Item> filteredList = hashMapItems.values().stream()
+                    .filter(item -> item.getItemName().toLowerCase().contains(firstName.toLowerCase()))
+                    .toList();
+
+            return FXCollections.observableArrayList(filteredList);
+        } else {
+            return getItem(); // return all items
+        }
+    }
+
+    public ObservableList<Item> getItem() {
         return itemList;
     }
-    public boolean removeItem(int codeBar){
-        Item.deleteItem(codeBar);
-        //Item newItem = new Item(id, "deete", 0);
-        //itemList.add(newItem);
-        //return Item.deleteItem(id);
 
-        //int selectedId = tableView.getSelectionModel().getSelectedItem().itemIdProperty().get();
-        //Item.deleteItem(selectedId);
+    public boolean removeItem(int codeBar) {
+        Item.deleteItem(codeBar);
+
         itemList.removeIf(i -> i.itemIdProperty().get() == codeBar);
         LOG.info("Deleted item with codeBar: " + codeBar);
 
@@ -63,48 +72,39 @@ public class ItemController {
     }
 
 
-    public boolean addNewItem(String name,int quantiy, double cost) {
-        Item newItem = Item.addAndGetItem(name,quantiy, cost );
+    public boolean addNewItem(String name, int quantity, double cost) {
+        Item newItem = Item.addAndGetItem(name, quantity, cost);
+
         LOG.info("Add the item into sql database");
 
-            itemList.add(newItem); 
-            return true;
+
+        itemList.add(newItem);
+
+
+        hashMapItems.clear();
+
+
+        for (Item item : itemList) {
+            String key = item.getItemName();
+
+            if (hashMapItems.containsKey(key)) {
+                Item existing = hashMapItems.get(key);
+                existing.setItemQuantity(existing.getItemQuantity() + item.getItemQuantity());
+            } else {
+                hashMapItems.put(key, item);
+            }
+        }
+
+
+        itemList.setAll(hashMapItems.values());
+
+        return true;
+    }
+
+    public void removingDuplicates() {
+
+        itemList.setAll(hashMapItems.values());
 
     }
 
-//    public boolean addNewItem( String name, double cost) {
-//         int generateCodeBar = Item.addItemAndGetCodebar(name, cost);
-//         Item item= new Item(generateCodeBar, name, cost, this.itemDate.get());
-//         itemList.add(item);
-//         return true;
-//    }
-
-//        Item codebar = new Item();
-//        int code = codebar.itemIdProperty().get();
-//        Item s = new Item(name, cost);
-//        for (int i = 0; i<itemList.size(); i++){
-//
-//        }
-//
-//
-//
-//        itemList.add(itemList.get(itemList.size()-1));
-//        System.out.println("I added the supply");
-//        return Item.addItem(name, cost);
-//        Item item = new Item();
-//        item.addItemWithBarcode(name, cost);
-//        itemList.add(item);
-//        return true;
-
-
-
-
-
-
-//    @Override
-//    public String toString() {
-//        return "SupplyController{" +
-//                "queue=" + queue +
-//                '}';
-//    }
 }

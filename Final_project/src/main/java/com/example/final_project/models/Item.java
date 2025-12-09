@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Item {
@@ -26,24 +27,63 @@ public class Item {
     }
 
 
-    public IntegerProperty itemIdProperty() { return itemId; }
-    public StringProperty itemNameProperty() { return itemName; }
-    public IntegerProperty itemQuantityProperty() { return itemQuantity; }
-    public DoubleProperty itemCostProperty() { return itemCost; }
-    public ObjectProperty<Timestamp> itemDateProperty() { return itemDate; }
+    public IntegerProperty itemIdProperty() {
+        return itemId;
+    }
+
+    public StringProperty itemNameProperty() {
+        return itemName;
+    }
+
+    public IntegerProperty itemQuantityProperty() {
+        return itemQuantity;
+    }
+
+    public DoubleProperty itemCostProperty() {
+        return itemCost;
+    }
+
+    public ObjectProperty<Timestamp> itemDateProperty() {
+        return itemDate;
+    }
 
 
-    public int getItemId() { return itemId.get(); }
-    public String getItemName() { return itemName.get(); }
-    public int getItemQuantity() { return itemQuantity.get(); }
-    public double getItemCost() { return itemCost.get(); }
-    public Timestamp getItemDate() { return itemDate.get(); }
+    public int getItemId() {
+        return itemId.get();
+    }
+
+    public String getItemName() {
+        return itemName.get();
+    }
+
+    public int getItemQuantity() {
+        return itemQuantity.get();
+    }
+
+    public double getItemCost() {
+        return itemCost.get();
+    }
+
+    public Timestamp getItemDate() {
+        return itemDate.get();
+    }
 
 
-    public void setItemName(String name) { this.itemName.set(name); }
-    public void setItemQuantity(int quantity) { this.itemQuantity.set(quantity); }
-    public void setItemCost(double cost) { this.itemCost.set(cost); }
-    public void setItemDate(Timestamp date) { this.itemDate.set(date); }
+    public void setItemName(String name) {
+        this.itemName.set(name);
+    }
+
+    public void setItemQuantity(int quantity) {
+        this.itemQuantity.set(quantity);
+    }
+
+    public void setItemCost(double cost) {
+        this.itemCost.set(cost);
+    }
+
+    public void setItemDate(Timestamp date) {
+        this.itemDate.set(date);
+    }
 
 
     public static Item addAndGetItem(String name, int quantity, double cost) {
@@ -96,6 +136,57 @@ public class Item {
         return itemData;
     }
 
+    public static List<Item> searchItemByName(String name) {
+        List<Item> filtered = new ArrayList<>();
+        String sql = "SELECT itemBarCode, itemName, itemQuantity, itemCost, itemDate FROM item WHERE itemName LIKE ?";
+
+        try (Connection conn = database.ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + name + "%"); // partial match
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("itemBarCode");
+                    String itemName = rs.getString("itemName");
+                    int quantity = rs.getInt("itemQuantity");
+                    double cost = rs.getDouble("itemCost");
+                    Timestamp date = rs.getTimestamp("itemDate");
+
+                    filtered.add(new Item(id, itemName, quantity, cost, date));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return filtered;
+    }
+//    public static List<Item> refreshItems() {
+//        List<Item> allItems = new ArrayList<>();
+//        String sql = "SELECT itemBarCode, itemName, itemQuantity, itemCost, itemDate FROM item";
+//
+//        try (Connection conn = database.ConnectionManager.getConnection();
+//             PreparedStatement ps = conn.prepareStatement(sql);
+//             ResultSet rs = ps.executeQuery()) {
+//
+//            while (rs.next()) {
+//                int id = rs.getInt("itemBarCode");
+//                String itemName = rs.getString("itemName");
+//                int quantity = rs.getInt("itemQuantity");
+//                double cost = rs.getDouble("itemCost");
+//                Timestamp date = rs.getTimestamp("itemDate");
+//
+//                allItems.add(new Item(id, itemName, quantity, cost, date));
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return allItems;
+//    }
 
     public static boolean deleteItem(int id) {
         String sql = "DELETE FROM item WHERE itemBarCode = ?";

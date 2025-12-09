@@ -24,7 +24,7 @@ public class HelloApplication extends Application {
         stage.setTitle("Menu");
         stage.setScene(scene);
         stage.show();
-        //supplyController.SupplyTotal();
+
     }
 
     public static void main(String[] args) {
