@@ -4,6 +4,7 @@ import database.ConnectionManager;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -67,15 +68,14 @@ public class Employee {
 
     public static boolean addEmployee(Employee employee) throws SQLException {
         boolean result = false;
-        String sql = "Insert into Employee (id, firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?, ?)";
+        String sql = "Insert into Employee (firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?)";
 
         try(Connection conn = ConnectionManager.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);) {
-            pstm.setInt(1, employee.getId());
-            pstm.setString(2,employee.getFirstName());
-            pstm.setString(3, employee.getLastName());
-            pstm.setDouble(4,employee.getSalary());
-            pstm.setInt(5, employee.getHours_worked());
+            pstm.setString(1,employee.getFirstName());
+            pstm.setString(2, employee.getLastName());
+            pstm.setDouble(3,employee.getSalary());
+            pstm.setInt(4, employee.getHours_worked());
 
             int rowInserted = pstm.executeUpdate();
             if(rowInserted > 0){
@@ -151,6 +151,33 @@ public class Employee {
             throw new RuntimeException(e);
         }
         return result;
+    }
+
+    public static ObservableList<Employee> searchEmployee(Employee employee){
+        ObservableList<Employee> employees = FXCollections.observableArrayList();
+
+        String sql = "Select * from Employee Where firstName Like ?";
+        try(Connection conn = ConnectionManager.getConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);) {
+            pstm.setString(1, "%" +employee.getFirstName() +"%");
+
+            ResultSet rs = pstm.executeQuery();
+
+            while(rs.next()){
+                int eId = rs.getInt("id");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                double salary = rs.getDouble("salary");
+                int hoursWorked = rs.getInt("hoursWorked");
+                Employee employee2 = new Employee(eId, firstName, lastName, salary, hoursWorked);
+                employees.add(employee2);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return employees;
     }
 
 }

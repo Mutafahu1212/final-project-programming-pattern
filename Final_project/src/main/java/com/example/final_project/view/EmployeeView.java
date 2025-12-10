@@ -10,9 +10,28 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 public class EmployeeView extends VBox {
+//    Logger logger = Logger.getLogger(EmployeeView.class.getName());
+//    FileHandler fileHandler;// False to re-write file
+//
+//    {
+//        try {
+//            fileHandler = new FileHandler("src/logfile.log", true);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+//    fileHandler.setFormatter(new SimpleFormatter());
+//
+//    logger.addHandler(fileHandler);
+
+
     private final TableView<Employee> tableView;
     private final EmployeeController employeeController;
 
@@ -54,32 +73,15 @@ public class EmployeeView extends VBox {
     }
 
     private void createSearchBar(){
-        Label searchlabel = new Label("First Name");
-        this.getChildren().add(searchlabel);
-
-        TextField searchTextField = new TextField();
-        this.getChildren().add(searchTextField);
-
         Button searchBtn = new Button("Search");
         HBox searchbox = new HBox(10);
-        searchbox.getChildren().addAll(searchlabel,searchTextField, searchBtn);
+        searchbox.getChildren().addAll(searchBtn);
         this.getChildren().add(searchbox);
 
         searchBtn.setOnAction(event ->{
-            String firstName = searchTextField.getText();
-            if (firstName == null) firstName = "";
-
-            ObservableList<Employee> searchFirstName = FXCollections.observableArrayList();
-
-            for (Employee emp : employeeController.getEmployees()) {
-                String empName = String.valueOf(emp.firstNameProperty().get());
-                if (empName.equalsIgnoreCase(firstName)) {
-                    searchFirstName.add(emp);
-                    tableView.setItems(searchFirstName);
-                    break;
-                }
-                tableView.setItems(employeeController.getEmployees());
-            }
+            String fName = fNameTextField.getText();
+            Employee employee = new Employee(0, fName,"",0,0);
+            tableView.setItems(employeeController.searchEmployee(employee));
         });
     }
 
@@ -109,7 +111,6 @@ public class EmployeeView extends VBox {
                 throw new RuntimeException(e);
             }
             tableView.setItems(employeeController.getEmployees());
-//                    tableView.refresh();
         });
     }
 
