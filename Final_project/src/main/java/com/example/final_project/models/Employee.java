@@ -67,15 +67,15 @@ public class Employee {
 
     public static boolean addEmployee(Employee employee) throws SQLException {
         boolean result = false;
-        String sql = "Insert into Employee (firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?)";
+        String sql = "Insert into Employee (id, firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?, ?)";
 
         try(Connection conn = ConnectionManager.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);) {
-//            pstm.setInt(1, employee.getId());
-            pstm.setString(1,employee.getFirstName());
-            pstm.setString(2, employee.getLastName());
-            pstm.setDouble(3,employee.getSalary());
-            pstm.setInt(4, employee.getHours_worked());
+            pstm.setInt(1, employee.getId());
+            pstm.setString(2,employee.getFirstName());
+            pstm.setString(3, employee.getLastName());
+            pstm.setDouble(4,employee.getSalary());
+            pstm.setInt(5, employee.getHours_worked());
 
             int rowInserted = pstm.executeUpdate();
             if(rowInserted > 0){
@@ -125,7 +125,6 @@ public class Employee {
             pstm.setInt(4, employee.getHours_worked());
             pstm.setInt(5, employee.getId());
 
-
             int rowUpdated = pstm.executeUpdate();
             if(rowUpdated > 0){
                 result = true;
@@ -154,10 +153,4 @@ public class Employee {
         return result;
     }
 
-//    public static boolean searchLastName(Employee employee){
-//        boolean result = false;
-//        String sql ="Select From Employee Where lName Like ?";
-//
-//        return result;
-//    }
 }
