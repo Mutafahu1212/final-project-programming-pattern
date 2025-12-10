@@ -6,6 +6,7 @@ import com.example.final_project.controllers.ItemController;
 import com.example.final_project.factory.PaneFactory;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -24,10 +25,12 @@ public class MenuView extends VBox {
         this.itemButton();
         this.fianceButton();
         this.exitButton();
+        this.setAlignment(Pos.CENTER);
+        this.setSpacing(40);
     }
 
     public void exitButton(){
-        Button exitButton = PaneFactory.createButton("Exit");
+        Button exitButton = PaneFactory.exitButton();
         this.getChildren().add(exitButton);
         exitButton.setOnAction(event -> {Platform.exit();});
     }
