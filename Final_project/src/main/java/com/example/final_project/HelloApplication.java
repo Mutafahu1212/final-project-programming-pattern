@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
         ItemController itemController = new ItemController();
         EmployeeController employeeController = new EmployeeController();
         FinanceController financeController = new FinanceController();
-//        SupplyView view = new SupplyView(controller);
+
         MenuView view = new MenuView(employeeController, itemController, financeController);
 
 
@@ -24,7 +24,7 @@ public class HelloApplication extends Application {
         stage.setTitle("Menu");
         stage.setScene(scene);
         stage.show();
-        //supplyController.SupplyTotal();
+
     }
 
     public static void main(String[] args) {

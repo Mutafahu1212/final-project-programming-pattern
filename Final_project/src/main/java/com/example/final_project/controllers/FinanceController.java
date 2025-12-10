@@ -9,6 +9,11 @@ public class FinanceController {
       return finance;
     }
 
+  public void SetTotalCostItems(double revenu, double cost){
+
+  }
+
+
 }
 
 
