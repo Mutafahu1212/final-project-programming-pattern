@@ -44,15 +44,25 @@ public class EmployeeView extends VBox {
     public EmployeeView(EmployeeController employeeController) {
         this.employeeController = employeeController;
         this.tableView = new TableView<>();
-        this.createSearchBar();
         this.back();
         this.createTable();
         this.getChildren().add(tableView);
         this.bindTableData();
         this.textFields();
-        this.addEmployee();
-        this.deleteEmployee();
-        this.updateEmployee();
+        this.buttons();
+
+    }
+
+    public void buttons(){
+        Button search = createSearchBar();
+        Button add = addEmployee();
+        Button delete = deleteEmployee();
+        Button update = updateEmployee();
+        HBox hBox = new HBox(10);
+        hBox.getChildren().addAll(search, add, delete, update);
+        this.getChildren().add(hBox);
+
+
     }
 
     public void textFields(){
@@ -66,13 +76,13 @@ public class EmployeeView extends VBox {
         salaryTextField.setPromptText("Salary");
         hoursWorkedTextField = new TextField();
         hoursWorkedTextField.setPromptText("Work hours");
-        HBox hBox = new HBox();
+        HBox hBox = new HBox(10);
         hBox.getChildren().addAll(idTextField, fNameTextField, lNameTextField, salaryTextField, hoursWorkedTextField);
         this.getChildren().add(hBox);
 
     }
 
-    private void createSearchBar(){
+    private Button createSearchBar(){
         Button searchBtn = new Button("Search");
         HBox searchbox = new HBox(10);
         searchbox.getChildren().addAll(searchBtn);
@@ -83,6 +93,7 @@ public class EmployeeView extends VBox {
             Employee employee = new Employee(0, fName,"",0,0);
             tableView.setItems(employeeController.searchEmployee(employee));
         });
+        return searchBtn;
     }
 
     private void back(){
@@ -92,7 +103,7 @@ public class EmployeeView extends VBox {
         this.getChildren().add(hbox);
     }
 
-    private void addEmployee(){//add
+    private Button addEmployee(){//add
         Button addButton = PaneFactory.createButton("Add Employee");
         HBox hbox = new HBox(10);
         hbox.getChildren().add(addButton);
@@ -112,9 +123,11 @@ public class EmployeeView extends VBox {
             }
             tableView.setItems(employeeController.getEmployees());
         });
+
+        return addButton;
     }
 
-    private void deleteEmployee(){
+    private Button deleteEmployee(){
         Button deleteButton = PaneFactory.createButton("Delete");
 
         HBox hBox = new HBox(10);
@@ -129,9 +142,11 @@ public class EmployeeView extends VBox {
             employeeController.removeEmployee(employee);
             tableView.setItems(employeeController.getEmployees());
         });
+
+        return deleteButton;
     }
 
-    public void updateEmployee(){
+    public Button updateEmployee(){
         Button updateButton = PaneFactory.createButton("Update");
 
         HBox hBox = new HBox(10);
@@ -150,6 +165,8 @@ public class EmployeeView extends VBox {
             employeeController.updateEmployee(employee);
             tableView.setItems(employeeController.getEmployees());
         });
+
+        return updateButton;
     }
 
     private void createTable() {
