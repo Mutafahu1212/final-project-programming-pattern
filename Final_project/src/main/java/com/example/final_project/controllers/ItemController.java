@@ -13,12 +13,14 @@ import java.util.Map;
 import java.util.logging.*;
 
 
+import static com.example.final_project.models.Item.deleteItem;
 import static com.example.final_project.models.Item.searchItemByName;
 
 public class ItemController {
     private final ObservableList<Item> itemList = FXCollections.observableArrayList();
     private static final Logger LOG = Logger.getLogger(ItemController.class.getName());
     private Map<String, Item> hashMapItems = new HashMap<>();
+    Double TotalCost;
 
     static {
         LOG.setLevel(Level.ALL);
@@ -32,8 +34,9 @@ public class ItemController {
 
 
     public ItemController() {
-        List<Item> items = Item.getItem(); // fetch all items from DB
-        for (Item item : items) {
+        List<Item> items = Item.getItem();
+        for (int i = items.size() - 1; i >= 0; i--) {
+            Item item = items.get(i);
             String key = item.getItemName();
             if (hashMapItems.containsKey(key)) {
                 Item existing = hashMapItems.get(key);
@@ -47,14 +50,13 @@ public class ItemController {
 
     public ObservableList<Item> searchItem(String firstName) {
         if (firstName != null && !firstName.isEmpty()) {
-            // Filter items in the HashMap
+
             List<Item> filteredList = hashMapItems.values().stream()
                     .filter(item -> item.getItemName().toLowerCase().contains(firstName.toLowerCase()))
                     .toList();
-
             return FXCollections.observableArrayList(filteredList);
         } else {
-            return getItem(); // return all items
+            return getItem();
         }
     }
 
@@ -71,40 +73,43 @@ public class ItemController {
         return true;
     }
 
+    public Double getTotalItemsCost(){
+        for (Item item: itemList){
+            TotalCost += item.itemCostProperty().get();
+        }
+        System.out.println(TotalCost);
+        return TotalCost;
+    }
+
+
 
     public boolean addNewItem(String name, int quantity, double cost) {
+
         Item newItem = Item.addAndGetItem(name, quantity, cost);
-
         LOG.info("Add the item into sql database");
-
-
         itemList.add(newItem);
-
-
         hashMapItems.clear();
 
-
-        for (Item item : itemList) {
+        for (int i = itemList.size() - 1; i >= 0; i--) {
+            Item item = itemList.get(i);
             String key = item.getItemName();
 
             if (hashMapItems.containsKey(key)) {
                 Item existing = hashMapItems.get(key);
-                existing.setItemQuantity(existing.getItemQuantity() + item.getItemQuantity());
+                int totalQuantity = existing.getItemQuantity() + item.getItemQuantity();
+
+                    existing.setItemQuantity(totalQuantity);
+
             } else {
                 hashMapItems.put(key, item);
             }
         }
 
-
         itemList.setAll(hashMapItems.values());
-
         return true;
     }
-
     public void removingDuplicates() {
-
         itemList.setAll(hashMapItems.values());
-
     }
 
 }

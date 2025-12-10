@@ -52,9 +52,7 @@ public class EmployeeView extends VBox {
         });
     }
 
-//    private void createEmployee(){
-//        Label
-//    }
+
 
     private void createTable() {
         TableColumn<Employee, String> firstNameCol = new TableColumn<>("First Name");

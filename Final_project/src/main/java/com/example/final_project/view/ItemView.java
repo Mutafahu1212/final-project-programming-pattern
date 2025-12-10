@@ -20,9 +20,6 @@ private final TableView<Item> tableView;
 private final ItemController controller;
 
 
-
-
-
     public ItemView(ItemController controller) {
         this.tableView = new TableView<>();
         this.controller = controller;
@@ -31,14 +28,8 @@ private final ItemController controller;
         this.bindTableData();
         this.getChildren().add(tableView);
         this.addAndDeleteItemsElement();
-        //this.delete();
-
-
 
     }
-
-
-
     public void createTable(){
         TableColumn<Item, Integer> itemIdCol = new TableColumn<>("Item Code");
         itemIdCol.setCellValueFactory(new PropertyValueFactory<>("itemId"));
@@ -79,11 +70,11 @@ private final ItemController controller;
 
 
 
-            //boolean selectedId = tableView.getSelectionModel().getSelectedItem();
+
 
 
         });
-        //TextField idField = PaneFactory.createTextField("id ");
+
         TextField nameField = PaneFactory.createTextField("name");
         TextField quantityField = PaneFactory.createTextField("quantity");
         TextField costField = PaneFactory.createTextField("cost");
@@ -98,6 +89,7 @@ private final ItemController controller;
             controller.addNewItem(
                     nameField.getText(),Integer.parseInt(quantityField.getText()),
                     Double.parseDouble(costField.getText()));
+
         });
 
     }
