@@ -17,13 +17,19 @@ public class Employee {
     private final StringProperty lastName;
     private final DoubleProperty salary;
     private final IntegerProperty hours_worked;
+    private final IntegerProperty years_worked;
+    private final StringProperty phoneNumber;
+    private final StringProperty email;
 
-    public Employee(int id, String firstName, String lastName, double salary, int hours_worked) {
+    public Employee(int id, String firstName, String lastName, double salary, int hours_worked, int years_worked, String phoneNumber, String email) {
         this.id = new SimpleIntegerProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.salary = new SimpleDoubleProperty(salary);
         this.hours_worked = new SimpleIntegerProperty(hours_worked);
+        this.years_worked = new SimpleIntegerProperty(years_worked);
+        this.phoneNumber = new SimpleStringProperty(phoneNumber);
+        this.email = new SimpleStringProperty(email);
     }
 
     public int getId() {
@@ -44,6 +50,30 @@ public class Employee {
 
     public int getHours_worked() {
         return hours_worked.get();
+    }
+
+    public int getYears_worked() {
+        return years_worked.get();
+    }
+
+    public IntegerProperty years_workedProperty() {
+        return years_worked;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.get();
+    }
+
+    public StringProperty phoneNumberProperty() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public StringProperty emailProperty() {
+        return email;
     }
 
     public IntegerProperty idProperty() {
@@ -68,7 +98,7 @@ public class Employee {
 
     public static boolean addEmployee(Employee employee) throws SQLException {
         boolean result = false;
-        String sql = "Insert into Employee (firstName, lastName, salary, hoursWorked) Values (?, ?, ?, ?)";
+        String sql = "Insert into Employee (firstName, lastName, salary, hoursWorked, yearsWorked, phoneNumber, email) Values (?, ?, ?, ?, ?, ?, ?)";
 
         try(Connection conn = ConnectionManager.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);) {
@@ -76,6 +106,9 @@ public class Employee {
             pstm.setString(2, employee.getLastName());
             pstm.setDouble(3,employee.getSalary());
             pstm.setInt(4, employee.getHours_worked());
+            pstm.setInt(5, employee.getYears_worked());
+            pstm.setString(6, employee.getPhoneNumber());
+            pstm.setString(7, employee.getEmail());
 
             int rowInserted = pstm.executeUpdate();
             if(rowInserted > 0){
@@ -102,7 +135,11 @@ public class Employee {
                 String lastName = rs.getString("lastName");
                 double salary = rs.getDouble("salary");
                 int hoursWorked = rs.getInt("hoursWorked");
-                Employee employee = new Employee(eId, firstName, lastName, salary, hoursWorked);
+                int yearsWorked = rs.getInt("yearsWorked");
+                String phoneNumber = rs.getString("phoneNumber");
+                String email = rs.getString("email");
+
+                Employee employee = new Employee(eId, firstName, lastName, salary, hoursWorked, yearsWorked, phoneNumber, email);
                 employeeData.add(employee);
             }
 
@@ -115,7 +152,7 @@ public class Employee {
 
     public static boolean updateEmployee(Employee employee){
         boolean result = false;
-        String sql = "Update Employee Set firstName=?, lastName=?, salary=?, hoursWorked=? Where id=?";
+        String sql = "Update Employee Set firstName=?, lastName=?, salary=?, hoursWorked=?, yearsWorked=?, phoneNumber=?, email=? Where id=?";
 
         try(Connection conn = ConnectionManager.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);) {
@@ -123,7 +160,10 @@ public class Employee {
             pstm.setString(2, employee.getLastName());
             pstm.setDouble(3,employee.getSalary());
             pstm.setInt(4, employee.getHours_worked());
-            pstm.setInt(5, employee.getId());
+            pstm.setInt(5, employee.getYears_worked());
+            pstm.setString(6, employee.getPhoneNumber());
+            pstm.setString(7, employee.getEmail());
+            pstm.setInt(8, employee.getId());
 
             int rowUpdated = pstm.executeUpdate();
             if(rowUpdated > 0){
@@ -156,10 +196,10 @@ public class Employee {
     public static ObservableList<Employee> searchEmployee(Employee employee){
         ObservableList<Employee> employees = FXCollections.observableArrayList();
 
-        String sql = "Select * from Employee Where firstName Like ?";
+        String sql = "Select * from Employee Where lastName Like ?";
         try(Connection conn = ConnectionManager.getConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);) {
-            pstm.setString(1, "%" +employee.getFirstName() +"%");
+            pstm.setString(1, "%" +employee.getLastName() +"%");
 
             ResultSet rs = pstm.executeQuery();
 
@@ -169,7 +209,11 @@ public class Employee {
                 String lastName = rs.getString("lastName");
                 double salary = rs.getDouble("salary");
                 int hoursWorked = rs.getInt("hoursWorked");
-                Employee employee2 = new Employee(eId, firstName, lastName, salary, hoursWorked);
+                int yearsWorked = rs.getInt("yearsWorked");
+                String phoneNumber = rs.getString("phoneNumber");
+                String email = rs.getString("email");
+
+                Employee employee2 = new Employee(eId, firstName, lastName, salary, hoursWorked, yearsWorked, phoneNumber, email);
                 employees.add(employee2);
             }
 

@@ -5,6 +5,8 @@ import com.example.final_project.factory.PaneFactory;
 import com.example.final_project.models.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -31,7 +33,6 @@ public class EmployeeView extends VBox {
 //
 //    logger.addHandler(fileHandler);
 
-
     private final TableView<Employee> tableView;
     private final EmployeeController employeeController;
 
@@ -40,6 +41,9 @@ public class EmployeeView extends VBox {
     TextField lNameTextField;
     TextField salaryTextField;
     TextField hoursWorkedTextField;
+    TextField yearsWorkedTextField;
+    TextField phoneNumberTextField;
+    TextField emailTextField;
 
     public EmployeeView(EmployeeController employeeController) {
         this.employeeController = employeeController;
@@ -76,21 +80,29 @@ public class EmployeeView extends VBox {
         salaryTextField.setPromptText("Salary");
         hoursWorkedTextField = new TextField();
         hoursWorkedTextField.setPromptText("Work hours");
+        yearsWorkedTextField = new TextField();
+        yearsWorkedTextField.setPromptText("Years Worked");
+        phoneNumberTextField = new TextField();
+        phoneNumberTextField.setPromptText("Phone");
+        emailTextField = new TextField();
+        emailTextField.setPromptText("Email");
+
+
         HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(idTextField, fNameTextField, lNameTextField, salaryTextField, hoursWorkedTextField);
+        hBox.getChildren().addAll(idTextField, fNameTextField, lNameTextField, salaryTextField, hoursWorkedTextField, yearsWorkedTextField, phoneNumberTextField, emailTextField);
         this.getChildren().add(hBox);
 
     }
 
     private Button createSearchBar(){
-        Button searchBtn = new Button("Search");
+        Button searchBtn = new Button("Search By Last Name");
         HBox searchbox = new HBox(10);
         searchbox.getChildren().addAll(searchBtn);
         this.getChildren().add(searchbox);
 
         searchBtn.setOnAction(event ->{
-            String fName = fNameTextField.getText();
-            Employee employee = new Employee(0, fName,"",0,0);
+            String lName = lNameTextField.getText();
+            Employee employee = new Employee(0, "",lName,0,0, 0, "", "");
             tableView.setItems(employeeController.searchEmployee(employee));
         });
         return searchBtn;
@@ -109,13 +121,23 @@ public class EmployeeView extends VBox {
         hbox.getChildren().add(addButton);
         this.getChildren().add(hbox);
 
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        });
+
         addButton.setOnAction( actionEvent -> {
             String fName = fNameTextField.getText();
             String lName = lNameTextField.getText();
             double salary = Double.parseDouble(salaryTextField.getText());
             int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
+            int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
+            String phoneNumber = phoneNumberTextField.getText();
+            String email = emailTextField.getText();
 
-            Employee employee = new Employee(0, fName, lName, salary, hoursWorked);
+            Employee employee = new Employee(0, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
             try {
                 employeeController.addEmployee(employee);
             } catch (SQLException e) {
@@ -137,7 +159,7 @@ public class EmployeeView extends VBox {
         deleteButton.setOnAction(actionEvent -> {
             int id = Integer.parseInt(idTextField.getText());
 
-            Employee employee = new Employee(id, "", "", 0, 0);
+            Employee employee = new Employee(id, "", "", 0, 0, 0, "", "");
 
             employeeController.removeEmployee(employee);
             tableView.setItems(employeeController.getEmployees());
@@ -159,8 +181,11 @@ public class EmployeeView extends VBox {
             String lName = lNameTextField.getText();
             double salary = Double.parseDouble(salaryTextField.getText());
             int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
+            int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
+            String phoneNumber = phoneNumberTextField.getText();
+            String email = emailTextField.getText();
 
-            Employee employee = new Employee(id, fName, lName, salary, hoursWorked);
+            Employee employee = new Employee(0, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
 
             employeeController.updateEmployee(employee);
             tableView.setItems(employeeController.getEmployees());
@@ -184,7 +209,16 @@ public class EmployeeView extends VBox {
         TableColumn<Employee, Integer> hoursCol = new TableColumn<>("Hours Worked");
         hoursCol.setCellValueFactory(new PropertyValueFactory<>("hoursWorked"));
 
-        tableView.getColumns().addAll(idCol, firstNameCol, lastNameCol, salaryCol, hoursCol);
+        TableColumn<Employee, Integer> yearsCol = new TableColumn<>("Years Worked");
+        yearsCol.setCellValueFactory(new PropertyValueFactory<>("yearsWorked"));
+
+        TableColumn<Employee, String> phoneNumberCol = new TableColumn<>("Phone Number");
+        phoneNumberCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+        TableColumn<Employee, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tableView.getColumns().addAll(idCol, firstNameCol, lastNameCol, salaryCol, hoursCol, yearsCol, phoneNumberCol, emailCol);
     }
 
     private void bindTableData() {
