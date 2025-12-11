@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import com.example.final_project.models.Item;
+import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
@@ -19,8 +20,9 @@ public class ItemView extends VBox {
 private final TableView<Item> tableView;
 private final ItemController controller;
 
-
-    public ItemView(ItemController controller) {
+Stage stage;
+    public ItemView(Stage stage, ItemController controller) {
+        this.stage = stage;
         this.tableView = new TableView<>();
         this.controller = controller;
         this.createSearchBar();
@@ -28,6 +30,7 @@ private final ItemController controller;
         this.bindTableData();
         this.getChildren().add(tableView);
         this.addAndDeleteItemsElement();
+        this.backbtn();
 
     }
     public void createTable(){
@@ -120,10 +123,19 @@ private final ItemController controller;
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public void backbtn(){
+
+    }
 
 
 
     private void createSearchBar(){
+        Button backBtn = PaneFactory.backButton(stage);
+        HBox hbox = new HBox(10);
+        hbox.getChildren().add(backBtn);
+        this.getChildren().add(hbox);
+
+
         Label searchlabel = new Label("Item Name");
         this.getChildren().add(searchlabel);
 
@@ -132,7 +144,8 @@ private final ItemController controller;
 
         Button searchBtn = new Button("Search");
         HBox searchbox = new HBox(10);
-        searchbox.getChildren().addAll(searchlabel,searchTextField, searchBtn);
+        searchbox.getChildren().addAll(searchlabel,searchTextField, searchBtn,backBtn);
+
         this.getChildren().add(searchbox);
 
         searchBtn.setOnAction(event -> {

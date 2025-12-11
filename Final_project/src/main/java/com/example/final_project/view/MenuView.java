@@ -57,7 +57,7 @@ public class MenuView extends VBox {
         supplyButton.setOnAction(
                 event->{
                     Scene scene = supplyButton.getScene();
-                    scene.setRoot(new ItemView(itemController));
+                    scene.setRoot(new ItemView(stage, itemController));
                 }
         );
     }
@@ -68,7 +68,7 @@ public class MenuView extends VBox {
 
         financeButton.setOnAction(event ->{
             Scene scene = financeButton.getScene();
-            scene.setRoot(new FinanceView(financeController));
+            scene.setRoot(new FinanceView(stage, financeController));
         });
     }
 }

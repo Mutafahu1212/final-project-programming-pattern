@@ -7,23 +7,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class FinanceView extends VBox {
     FinanceController financeController= new FinanceController();
 
 
-
-    public FinanceView(FinanceController controller){
+    Stage stage;
+    public FinanceView(Stage stage, FinanceController controller){
+        this.stage = stage;
         this.financeTools();
+
     }
     public  void financeTools(){
         TextField RevenueTf = PaneFactory.createTextField("Revenue");
         TextField CostTf = PaneFactory.createTextFieldUneditable("Cost");
         TextField profitTf = PaneFactory.createTextFieldUneditable("profit");
         Button calBtn = PaneFactory.createButton("Calculate");
+        Button backBtn = PaneFactory.backButton(stage);
 
 
-        VBox financeBox = PaneFactory.createVBox(40,RevenueTf, CostTf, profitTf, calBtn);
+        VBox financeBox = PaneFactory.createVBox(40,RevenueTf, CostTf, profitTf, calBtn,backBtn);
         financeBox.setFillWidth(false);
         financeBox.setAlignment(Pos.CENTER);
         this.getChildren().add(financeBox);
