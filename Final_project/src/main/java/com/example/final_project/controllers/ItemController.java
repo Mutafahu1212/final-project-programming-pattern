@@ -1,9 +1,11 @@
 package com.example.final_project.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import com.example.final_project.models.Item;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,15 +70,18 @@ public class ItemController {
     }
 
     public boolean removeItem(String name) {
-        Item.deleteItem(name);
+        new Thread(() -> {
 
-        itemList.removeIf(i -> i.getItemName().equals(name));
-        hashMapItems.remove(name);
+            Item.deleteItem(name);
 
-        LOG.info("Deleted item: " + name);
+            synchronized (hashMapItems) {
+                hashMapItems.remove(name);
+                itemList.removeIf(i -> i.getItemName().equals(name));
+            }
+            LOG.info("Deleted item: " + name);
+        }).start();
         return true;
     }
-
 
     public Double getTotalItemsCost() {
         double totalCost = 0;
@@ -91,43 +96,38 @@ public class ItemController {
     }
 
 
-
     public boolean addNewItem(String name, int quantity, double cost) {
+        new Thread(() -> {
+            Item newItem = Item.addAndGetItem(name, quantity, cost);
+            if (newItem == null) {
+                LOG.warning("Failed to add item in database");
+                return;
+            }
+            LOG.info("Inserted new item into SQL.");
 
-        Item newItem = Item.addAndGetItem(name, quantity, cost);
-        if (newItem == null){
-            LOG.warning("Failed to add item in data base");
-            return false;
-        }
-
-
-        LOG.info("Inserted new item into SQL.");
-
-
-        if (hashMapItems.containsKey(name)) {
-
-            Item existing = hashMapItems.get(name);
-
-            int newQuantity = existing.getItemQuantity() + quantity;
-            double newCost = cost;
-
-            existing.setItemQuantity(newQuantity);
-            existing.setItemCost(newCost);
+            synchronized (hashMapItems) {
+                if (hashMapItems.containsKey(name)) {
+                    Item existing = hashMapItems.get(name);
+                    int newQuantity = existing.getItemQuantity() + quantity;
+                    existing.setItemQuantity(newQuantity);
+                    existing.setItemCost(cost);
 
 
-            Item.updateItem(name, newQuantity, newCost);
-            Item.deleteDuplicatesByName(name);
+                    Item.updateItem(name, newQuantity, cost);
 
-        } else {
-            hashMapItems.put(name, newItem);
-        }
 
-        itemList.setAll(hashMapItems.values());
+                    new Thread(() -> Item.deleteDuplicatesByName(name)).start();
+                } else {
+                    hashMapItems.put(name, newItem);
+                }
+
+                Platform.runLater(() -> itemList.setAll(hashMapItems.values()));
+            }
+        }).start();
         return true;
     }
 
 
-    public void removingDuplicates() {
-        itemList.setAll(hashMapItems.values());
-    }
+
+
 }
