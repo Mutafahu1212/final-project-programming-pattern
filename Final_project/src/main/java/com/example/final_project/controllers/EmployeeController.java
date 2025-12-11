@@ -14,6 +14,7 @@ public class EmployeeController {
 
     public ObservableList<Employee> getEmployees() {
         ObservableList<Employee> list = Employee.getAllEmployees();
+        employeeQueue.add((Employee) list);
         raiseForLongTermEmployees();
         return list;
     }
@@ -52,14 +53,10 @@ public class EmployeeController {
     public double totalSalary(){
         double result = 0;
 
-
-            for (Employee e : Employee.getAllEmployees()) {
-                result += e.getSalary();
-                System.out.println(result);
-            }
-
-
-
+        for (Employee e : Employee.getAllEmployees()) {
+            result += e.getSalary();
+            System.out.println(result);
+        }
 
         return result;
     }
