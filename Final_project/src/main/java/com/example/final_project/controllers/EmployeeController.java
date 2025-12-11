@@ -41,4 +41,13 @@ public class EmployeeController {
     public ObservableList<Employee>  searchEmployee(Employee employee){
         return Employee.searchEmployee(employee);
     }
+
+    public double totalSalary(){
+        double result = 0;
+
+        for(int i = 0; i < employeesList.size(); i++){
+            result += employeesList.get(i).getSalary();
+        }
+        return result;
+    }
 }
