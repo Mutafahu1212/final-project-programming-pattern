@@ -5,6 +5,7 @@ import com.example.final_project.factory.PaneFactory;
 import com.example.final_project.models.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -12,28 +13,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class EmployeeView extends VBox {
-//    Logger logger = Logger.getLogger(EmployeeView.class.getName());
-//    FileHandler fileHandler;// False to re-write file
-//
-//    {
-//        try {
-//            fileHandler = new FileHandler("src/logfile.log", true);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    fileHandler.setFormatter(new SimpleFormatter());
-//
-//    logger.addHandler(fileHandler);
-
     private final TableView<Employee> tableView;
     private final EmployeeController employeeController;
 
@@ -46,7 +34,10 @@ public class EmployeeView extends VBox {
     TextField phoneNumberTextField;
     TextField emailTextField;
 
-    public EmployeeView(EmployeeController employeeController) {
+    Stage stage;
+
+    public EmployeeView(Stage stage, EmployeeController employeeController) {
+        this.stage = stage;
         this.employeeController = employeeController;
         this.tableView = new TableView<>();
         this.back();
@@ -64,10 +55,8 @@ public class EmployeeView extends VBox {
         Button delete = deleteEmployee();
         Button update = updateEmployee();
         HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(add, delete, update);
+        hBox.getChildren().addAll(delete, add, update);
         this.getChildren().add(hBox);
-
-
     }
 
     public void textFields(){
@@ -92,7 +81,6 @@ public class EmployeeView extends VBox {
         HBox hBox = new HBox(10);
         hBox.getChildren().addAll(idTextField, fNameTextField, lNameTextField, salaryTextField, hoursWorkedTextField, yearsWorkedTextField, phoneNumberTextField, emailTextField);
         this.getChildren().add(hBox);
-
     }
 
 
@@ -104,21 +92,32 @@ public class EmployeeView extends VBox {
         hBox.getChildren().addAll(searchButton, searchTextField);
         this.getChildren().add(hBox);
 
-        searchButton.setOnAction(actionEvent -> search(searchTextField.getText()));
-        searchTextField.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.ENTER)){
-                search(searchTextField.getText());
-            }
+        searchButton.setOnAction(actionEvent -> {
+            String lastName = searchTextField.getText();
+            Task<ObservableList<Employee>> task = new Task<ObservableList<Employee>>() {
+                @Override
+                protected ObservableList<Employee> call() throws Exception {
+                    return FXCollections.observableArrayList(
+                            employeeController.getEmployees().stream()
+                                    .filter(value-> value.getLastName().contains(lastName))
+                                    .collect(Collectors.toList()));
+                }
+            };
+
+            task.setOnSucceeded(
+                    event ->{
+                        tableView.setItems(task.getValue());
+                    }
+            );
+
+            Thread thread = new Thread(task);
+            thread.setDaemon(true);
+            thread.start();
         });
     }
 
-    private void search(String lastName){
-        Employee employee = new Employee(0, "",lastName,0,0, 0, "", "");
-        tableView.setItems(employeeController.searchEmployee(employee));
-    }
-
     private void back(){
-        Button backButton = PaneFactory.backButton();
+        Button backButton = PaneFactory.backButton(stage);
         HBox hbox = new HBox(10);
         hbox.getChildren().add(backButton);
         this.getChildren().add(hbox);
