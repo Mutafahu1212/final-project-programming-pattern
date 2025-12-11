@@ -143,7 +143,9 @@ public class Item {
         try (Connection conn = database.ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + name + "%"); // partial match
+            String fuzzy = "%" + String.join("%", name.split("")) + "%" +"%" + String.join("%", name.split("")) + "%";
+
+            ps.setString(1, fuzzy);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -163,30 +165,7 @@ public class Item {
 
         return filtered;
     }
-//    public static List<Item> refreshItems() {
-//        List<Item> allItems = new ArrayList<>();
-//        String sql = "SELECT itemBarCode, itemName, itemQuantity, itemCost, itemDate FROM item";
-//
-//        try (Connection conn = database.ConnectionManager.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql);
-//             ResultSet rs = ps.executeQuery()) {
-//
-//            while (rs.next()) {
-//                int id = rs.getInt("itemBarCode");
-//                String itemName = rs.getString("itemName");
-//                int quantity = rs.getInt("itemQuantity");
-//                double cost = rs.getDouble("itemCost");
-//                Timestamp date = rs.getTimestamp("itemDate");
-//
-//                allItems.add(new Item(id, itemName, quantity, cost, date));
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return allItems;
-//    }
+
 
     public static boolean deleteItem(String name) {
         String sql = "DELETE FROM item WHERE itemName = ?";
@@ -198,6 +177,46 @@ public class Item {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static boolean updateItem(String name, int quantity, double cost) {
+        String sql = "UPDATE item SET itemQuantity = ?, itemCost = ? WHERE itemName = ?";
+
+        try (Connection conn = database.ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, quantity);
+            stmt.setDouble(2, cost);
+            stmt.setString(3, name);
+
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void deleteDuplicatesByName(String name) {
+        String sql = """
+        DELETE FROM item 
+        WHERE itemName = ? 
+        AND itemBarCode NOT IN (
+            SELECT MIN(itemBarCode) FROM item WHERE itemName = ?
+        );
+        """;
+
+        try (Connection conn = database.ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, name);
+            stmt.setString(2, name);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

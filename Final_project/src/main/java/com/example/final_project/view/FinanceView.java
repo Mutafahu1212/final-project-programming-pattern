@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class FinanceView extends VBox {
+    FinanceController financeController= new FinanceController();
 
 
 
@@ -20,7 +21,7 @@ public class FinanceView extends VBox {
         TextField CostTf = PaneFactory.createTextFieldUneditable("Cost");
         TextField profitTf = PaneFactory.createTextFieldUneditable("profit");
         Button calBtn = PaneFactory.createButton("Calculate");
-        //this.getChildren().add(RevenueTf);
+
 
         VBox financeBox = PaneFactory.createVBox(40,RevenueTf, CostTf, profitTf, calBtn);
         financeBox.setFillWidth(false);
@@ -28,6 +29,14 @@ public class FinanceView extends VBox {
         this.getChildren().add(financeBox);
 
         calBtn.setOnAction(event->{
+            double revenu = Double.parseDouble(RevenueTf.getText());
+
+            financeController.SetProfit(revenu);
+            double profit = financeController.getProfit();
+            profitTf.setText(String.format("%.2f",profit));
+            CostTf.setText(String.format("%2f",financeController.getCost()));
+
+
 
         });
 

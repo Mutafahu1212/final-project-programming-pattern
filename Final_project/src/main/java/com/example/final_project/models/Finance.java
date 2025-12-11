@@ -26,4 +26,7 @@ public class Finance {
     public void setProfit() {
         this.profit = revenue - cost;
     }
+    public double getProfit(){
+        return profit;
+    }
 }
