@@ -10,14 +10,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class MenuView extends VBox {
     private final EmployeeController employeeController;
     private final ItemController itemController;
     private final FinanceController financeController;
+    Stage stage;
 
 
-    public MenuView(EmployeeController employeeController, ItemController itemController, FinanceController financeController){
+    public MenuView(Stage stage, EmployeeController employeeController, ItemController itemController, FinanceController financeController){
         this.employeeController = employeeController;
         this.itemController = itemController;
         this.financeController = financeController;
@@ -27,6 +29,7 @@ public class MenuView extends VBox {
         this.exitButton();
         this.setAlignment(Pos.CENTER);
         this.setSpacing(40);
+        this.stage = stage;
     }
 
     public void exitButton(){
@@ -42,7 +45,7 @@ public class MenuView extends VBox {
         employeeButton.setOnAction(
                 event->{
                     Scene scene = employeeButton.getScene();
-                    scene.setRoot(new EmployeeView(employeeController));
+                    scene.setRoot(new EmployeeView(stage, employeeController));
                 }
         );
     }

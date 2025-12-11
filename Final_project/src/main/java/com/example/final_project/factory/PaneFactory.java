@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class PaneFactory {
 
@@ -32,26 +33,21 @@ public class PaneFactory {
          return exit;
     }
 
-    //crete another buttons for menu options
-    public static Button menuButton(String label){
-        Button button = new Button(label);
-
-        return button;
-    }
-
-    public static Button backButton(){
+    public static Button backButton(Stage stage){
         Button button = new Button("BACK");
         button.setStyle("-fx-background-color: LIGHTSKYBLUE");
+
         button.setOnAction(actionEvent -> {
             ItemController itemController = new ItemController();
             EmployeeController employeeController = new EmployeeController();
             FinanceController financeController = new FinanceController();
-            MenuView menuView = new MenuView( employeeController, itemController,financeController);
-            Scene scene = new Scene(menuView, 800, 400);
-//            stage.setTitle("Menu");
-//            stage.setScene(scene);
-//            stage.show();
+            MenuView menuView = new MenuView( stage,employeeController, itemController,financeController);
+            Scene scene = new Scene(menuView, 500, 300);
+            stage.setTitle("Menu");
+            stage.setScene(scene);
+            stage.show();
         });
+
         return button;
     }
 

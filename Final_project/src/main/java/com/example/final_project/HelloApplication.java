@@ -17,14 +17,12 @@ public class HelloApplication extends Application {
         EmployeeController employeeController = new EmployeeController();
         FinanceController financeController = new FinanceController();
 
-        MenuView view = new MenuView(employeeController, itemController, financeController);
-
+        MenuView view = new MenuView(stage, employeeController, itemController, financeController);
 
         Scene scene = new Scene(view, 500, 300);
         stage.setTitle("Menu");
         stage.setScene(scene);
         stage.show();
-
     }
 
     public static void main(String[] args) {
