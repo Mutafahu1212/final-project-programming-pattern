@@ -4,6 +4,7 @@ import com.example.final_project.controllers.FinanceController;
 import com.example.final_project.factory.PaneFactory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,9 +18,12 @@ public class FinanceView extends VBox {
     public FinanceView(Stage stage, FinanceController controller){
         this.stage = stage;
         this.financeTools();
+        stage.setTitle("Finance");
 
     }
     public  void financeTools(){
+        Label title = new Label("Finance");
+        title.setStyle("-fx-font-size: 28px; -fx-font-weight: bold;");
         TextField RevenueTf = PaneFactory.createTextField("Revenue");
         TextField CostTf = PaneFactory.createTextFieldUneditable("Cost");
         TextField profitTf = PaneFactory.createTextFieldUneditable("profit");

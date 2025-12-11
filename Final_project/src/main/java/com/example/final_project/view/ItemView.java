@@ -23,6 +23,7 @@ private final ItemController controller;
 Stage stage;
     public ItemView(Stage stage, ItemController controller) {
         this.stage = stage;
+        stage.setTitle("Items");
         this.tableView = new TableView<>();
         this.controller = controller;
         this.createSearchBar();
