@@ -16,18 +16,18 @@ public class Employee {
     private final StringProperty firstName;
     private final StringProperty lastName;
     private final DoubleProperty salary;
-    private final IntegerProperty hours_worked;
-    private final IntegerProperty years_worked;
+    private final IntegerProperty hoursWorked;
+    private final IntegerProperty yearsWorked;
     private final StringProperty phoneNumber;
     private final StringProperty email;
 
-    public Employee(int id, String firstName, String lastName, double salary, int hours_worked, int years_worked, String phoneNumber, String email) {
+    public Employee(int id, String firstName, String lastName, double salary, int hoursWorked, int yearsWorked, String phoneNumber, String email) {
         this.id = new SimpleIntegerProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.salary = new SimpleDoubleProperty(salary);
-        this.hours_worked = new SimpleIntegerProperty(hours_worked);
-        this.years_worked = new SimpleIntegerProperty(years_worked);
+        this.hoursWorked = new SimpleIntegerProperty(hoursWorked);
+        this.yearsWorked = new SimpleIntegerProperty(yearsWorked);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.email = new SimpleStringProperty(email);
     }
@@ -48,16 +48,16 @@ public class Employee {
         return salary.get();
     }
 
-    public int getHours_worked() {
-        return hours_worked.get();
+    public int getHoursWorked() {
+        return hoursWorked.get();
     }
 
-    public int getYears_worked() {
-        return years_worked.get();
+    public int getYearsWorked() {
+        return yearsWorked.get();
     }
 
-    public IntegerProperty years_workedProperty() {
-        return years_worked;
+    public IntegerProperty yearsWorkedProperty() {
+        return yearsWorked;
     }
 
     public String getPhoneNumber() {
@@ -93,7 +93,7 @@ public class Employee {
     }
 
     public IntegerProperty hours_workedProperty() {
-        return hours_worked;
+        return hoursWorked;
     }
 
     public static boolean addEmployee(Employee employee) throws SQLException {
@@ -105,8 +105,8 @@ public class Employee {
             pstm.setString(1,employee.getFirstName());
             pstm.setString(2, employee.getLastName());
             pstm.setDouble(3,employee.getSalary());
-            pstm.setInt(4, employee.getHours_worked());
-            pstm.setInt(5, employee.getYears_worked());
+            pstm.setInt(4, employee.getHoursWorked());
+            pstm.setInt(5, employee.getYearsWorked());
             pstm.setString(6, employee.getPhoneNumber());
             pstm.setString(7, employee.getEmail());
 
@@ -159,8 +159,8 @@ public class Employee {
             pstm.setString(1,employee.getFirstName());
             pstm.setString(2, employee.getLastName());
             pstm.setDouble(3,employee.getSalary());
-            pstm.setInt(4, employee.getHours_worked());
-            pstm.setInt(5, employee.getYears_worked());
+            pstm.setInt(4, employee.getHoursWorked());
+            pstm.setInt(5, employee.getYearsWorked());
             pstm.setString(6, employee.getPhoneNumber());
             pstm.setString(7, employee.getEmail());
             pstm.setInt(8, employee.getId());
