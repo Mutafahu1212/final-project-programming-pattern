@@ -4,6 +4,8 @@ import com.example.final_project.models.Finance;
 
 public class FinanceController {
     double cost;
+    ItemController itemController;
+    EmployeeController employeeController;
 
     Finance finance;
     public Finance getFinance(){
@@ -11,8 +13,10 @@ public class FinanceController {
     }
 
   public void setProfit(double revenu){
-        ItemController itemController=  new ItemController();
-        cost = itemController.getTotalItemsCost();
+        itemController=  new ItemController();
+        employeeController = new EmployeeController();
+        System.out.println("employee salary total "+employeeController.totalSalary());
+        cost = itemController.getTotalItemsCost()+employeeController.totalSalary();
         System.out.println(cost);
         finance = new Finance(revenu,cost);
         finance.setProfit();

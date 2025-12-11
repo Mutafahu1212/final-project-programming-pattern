@@ -45,9 +45,15 @@ public class EmployeeController {
     public double totalSalary(){
         double result = 0;
 
-        for(int i = 0; i < employeesList.size(); i++){
-            result += employeesList.get(i).getSalary();
-        }
+
+            for (Employee e : Employee.getAllEmployees()) {
+                result += e.getSalary();
+                System.out.println(result);
+            }
+
+
+
+
         return result;
     }
 }

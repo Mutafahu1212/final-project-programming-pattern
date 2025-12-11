@@ -56,43 +56,72 @@ private final ItemController controller;
     }
 
 
-    public void addAndDeleteItemsElement(){
+    public void addAndDeleteItemsElement() {
 
         Button deleteBtn = PaneFactory.createButton("Delete");
-
         this.getChildren().add(deleteBtn);
-        deleteBtn.setOnAction(event->{
 
-            String selectedName = tableView.getSelectionModel().getSelectedItem().itemNameProperty().get();
-            Item.deleteItem(selectedName);
-            controller.removeItem(selectedName);
+        deleteBtn.setOnAction(event -> {
+            try {
+                var selected = tableView.getSelectionModel().getSelectedItem();
+                if (selected == null) {
+                    showWarning("Please select an item to delete.");
+                    return;
+                }
 
+                String selectedName = selected.itemNameProperty().get();
+                Item.deleteItem(selectedName);
+                controller.removeItem(selectedName);
 
-
-
-
-
-
+            } catch (Exception e) {
+                showWarning("Error deleting item.");
+            }
         });
 
         TextField nameField = PaneFactory.createTextField("name");
         TextField quantityField = PaneFactory.createTextField("quantity");
         TextField costField = PaneFactory.createTextField("cost");
-        Button addBtn =PaneFactory.createButton("Add Item");
-        HBox hBox = PaneFactory.createHBox(3,nameField,quantityField,costField,addBtn, deleteBtn
+        Button addBtn = PaneFactory.createButton("Add Item");
+
+        HBox hBox = PaneFactory.createHBox(
+                3, nameField, quantityField, costField, addBtn, deleteBtn
         );
-
-
         this.getChildren().add(hBox);
 
-        addBtn.setOnAction(event ->{
-            controller.addNewItem(
-                    nameField.getText(),Integer.parseInt(quantityField.getText()),
-                    Double.parseDouble(costField.getText()));
+        addBtn.setOnAction(event -> {
+            try {
+                if (nameField.getText().isEmpty() ||
+                        quantityField.getText().isEmpty() ||
+                        costField.getText().isEmpty()) {
 
+                    showWarning("All fields must be filled.");
+                    return;
+                }
+
+                int quantity = Integer.parseInt(quantityField.getText());
+                double cost = Double.parseDouble(costField.getText());
+
+                controller.addNewItem(
+                        nameField.getText(),
+                        quantity,
+                        cost
+                );
+
+            } catch (NumberFormatException e) {
+                showWarning("Quantity must be an integer.\nCost must be a number.");
+            } catch (Exception e) {
+                showWarning("Error adding item.");
+            }
         });
-
     }
+    private void showWarning(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Warning");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 
     private void createSearchBar(){
         Label searchlabel = new Label("Item Name");
