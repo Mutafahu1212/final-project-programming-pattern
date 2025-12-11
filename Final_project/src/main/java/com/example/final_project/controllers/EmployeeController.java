@@ -14,7 +14,7 @@ public class EmployeeController {
 
     public ObservableList<Employee> getEmployees() {
         ObservableList<Employee> list = Employee.getAllEmployees();
-        employeeQueue.add((Employee) list);
+        employeeQueue.addAll(list);
         raiseForLongTermEmployees();
         return list;
     }
