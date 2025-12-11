@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -49,6 +50,7 @@ public class EmployeeView extends VBox {
         this.employeeController = employeeController;
         this.tableView = new TableView<>();
         this.back();
+        this.searchButton();
         this.createTable();
         this.getChildren().add(tableView);
         this.bindTableData();
@@ -58,12 +60,11 @@ public class EmployeeView extends VBox {
     }
 
     public void buttons(){
-        Button search = createSearchBar();
         Button add = addEmployee();
         Button delete = deleteEmployee();
         Button update = updateEmployee();
         HBox hBox = new HBox(10);
-        hBox.getChildren().addAll(search, add, delete, update);
+        hBox.getChildren().addAll(add, delete, update);
         this.getChildren().add(hBox);
 
 
@@ -94,18 +95,26 @@ public class EmployeeView extends VBox {
 
     }
 
-    private Button createSearchBar(){
-        Button searchBtn = new Button("Search By Last Name");
-        HBox searchbox = new HBox(10);
-        searchbox.getChildren().addAll(searchBtn);
-        this.getChildren().add(searchbox);
 
-        searchBtn.setOnAction(event ->{
-            String lName = lNameTextField.getText();
-            Employee employee = new Employee(0, "",lName,0,0, 0, "", "");
-            tableView.setItems(employeeController.searchEmployee(employee));
+    private void searchButton(){
+        TextField searchTextField = new TextField();
+        searchTextField.setPromptText("Last Name");
+        Button searchButton = new Button("Search");
+        HBox hBox = new HBox(10);
+        hBox.getChildren().addAll(searchButton, searchTextField);
+        this.getChildren().add(hBox);
+
+        searchButton.setOnAction(actionEvent -> search(searchTextField.getText()));
+        searchTextField.setOnKeyPressed(event -> {
+            if(event.getCode().equals(KeyCode.ENTER)){
+                search(searchTextField.getText());
+            }
         });
-        return searchBtn;
+    }
+
+    private void search(String lastName){
+        Employee employee = new Employee(0, "",lastName,0,0, 0, "", "");
+        tableView.setItems(employeeController.searchEmployee(employee));
     }
 
     private void back(){
@@ -121,29 +130,34 @@ public class EmployeeView extends VBox {
         hbox.getChildren().add(addButton);
         this.getChildren().add(hbox);
 
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-            }
-        });
-
         addButton.setOnAction( actionEvent -> {
-            String fName = fNameTextField.getText();
-            String lName = lNameTextField.getText();
-            double salary = Double.parseDouble(salaryTextField.getText());
-            int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
-            int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
-            String phoneNumber = phoneNumberTextField.getText();
-            String email = emailTextField.getText();
+            if(fNameTextField.getText().isEmpty() || lNameTextField.getText().isEmpty() ||
+                    salaryTextField.getText().isEmpty() || hoursWorkedTextField.getText().isEmpty() ||
+                    yearsWorkedTextField.getText().isEmpty() || phoneNumberTextField.getText().isEmpty() ||
+                    emailTextField.getText().isEmpty())
+            {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText("Enter all information");
+                errorAlert.show();
 
-            Employee employee = new Employee(0, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
-            try {
-                employeeController.addEmployee(employee);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            } else {
+
+                String fName = fNameTextField.getText();
+                String lName = lNameTextField.getText();
+                double salary = Double.parseDouble(salaryTextField.getText());
+                int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
+                int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
+                String phoneNumber = phoneNumberTextField.getText();
+                String email = emailTextField.getText();
+
+                Employee employee = new Employee(0, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
+                try {
+                    employeeController.addEmployee(employee);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                tableView.setItems(employeeController.getEmployees());
             }
-            tableView.setItems(employeeController.getEmployees());
         });
 
         return addButton;
@@ -176,19 +190,30 @@ public class EmployeeView extends VBox {
         this.getChildren().add(hBox);
 
         updateButton.setOnAction(actionEvent -> {
-            int id = Integer.parseInt(idTextField.getText());
-            String fName = fNameTextField.getText();
-            String lName = lNameTextField.getText();
-            double salary = Double.parseDouble(salaryTextField.getText());
-            int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
-            int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
-            String phoneNumber = phoneNumberTextField.getText();
-            String email = emailTextField.getText();
+            if(fNameTextField.getText().isEmpty() || lNameTextField.getText().isEmpty() ||
+                    salaryTextField.getText().isEmpty() || hoursWorkedTextField.getText().isEmpty() ||
+                    yearsWorkedTextField.getText().isEmpty() || phoneNumberTextField.getText().isEmpty() ||
+                    emailTextField.getText().isEmpty())
+            {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText("Enter all information");
+                errorAlert.show();
 
-            Employee employee = new Employee(0, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
+            } else {
+                int id = Integer.parseInt(idTextField.getText());
+                String fName = fNameTextField.getText();
+                String lName = lNameTextField.getText();
+                double salary = Double.parseDouble(salaryTextField.getText());
+                int hoursWorked = Integer.parseInt(hoursWorkedTextField.getText());
+                int yearsWorked = Integer.parseInt(yearsWorkedTextField.getText());
+                String phoneNumber = phoneNumberTextField.getText();
+                String email = emailTextField.getText();
 
-            employeeController.updateEmployee(employee);
-            tableView.setItems(employeeController.getEmployees());
+                Employee employee = new Employee(id, fName, lName, salary, hoursWorked, yearsWorked, phoneNumber, email);
+
+                employeeController.updateEmployee(employee);
+                tableView.setItems(employeeController.getEmployees());
+            }
         });
 
         return updateButton;
