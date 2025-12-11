@@ -32,6 +32,7 @@ public class Employee {
         this.email = new SimpleStringProperty(email);
     }
 
+
     public int getId() {
         return id.get();
     }
@@ -74,6 +75,10 @@ public class Employee {
 
     public StringProperty emailProperty() {
         return email;
+    }
+
+    public void setSalary(double salary2){
+        salary.set(salary2);
     }
 
     public IntegerProperty idProperty() {
