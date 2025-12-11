@@ -137,7 +137,8 @@ public class EmployeeView extends VBox {
                     emailTextField.getText().isEmpty())
             {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setHeaderText("Enter all information");
+                errorAlert.setHeaderText("Error");
+                errorAlert.setContentText("Enter all employee information");
                 errorAlert.show();
 
             } else {
@@ -165,7 +166,6 @@ public class EmployeeView extends VBox {
 
     private Button deleteEmployee(){
         Button deleteButton = PaneFactory.createButton("Delete");
-
         HBox hBox = new HBox(10);
         hBox.getChildren().addAll(deleteButton);
         this.getChildren().add(hBox);
@@ -184,7 +184,6 @@ public class EmployeeView extends VBox {
 
     public Button updateEmployee(){
         Button updateButton = PaneFactory.createButton("Update");
-
         HBox hBox = new HBox(10);
         hBox.getChildren().addAll(updateButton);
         this.getChildren().add(hBox);
@@ -196,7 +195,8 @@ public class EmployeeView extends VBox {
                     emailTextField.getText().isEmpty())
             {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setHeaderText("Enter all information");
+                errorAlert.setHeaderText("Error");
+                errorAlert.setContentText("Enter all employee information");
                 errorAlert.show();
 
             } else {
