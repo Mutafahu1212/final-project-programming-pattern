@@ -5,21 +5,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class EmployeeController {
 
     public EmployeeController() {}
 
     public ObservableList<Employee> getEmployees() {
-        return Employee.getAllEmployees();
+        ObservableList<Employee> list = Employee.getAllEmployees();
+        raiseForLongTermEmployees();
+        return list;
     }
 
     ObservableList<Employee> employeesList = FXCollections.observableArrayList();
+
+    Queue<Employee> employeeQueue = new LinkedList<>();
 
     public boolean addEmployee(Employee employee) throws SQLException {
         boolean result = false;
         if(Employee.addEmployee(employee)){
             employeesList.add(employee);
+            employeeQueue.add(employee);
             result = true;
         }
         return result;
@@ -38,7 +45,7 @@ public class EmployeeController {
         return Employee.updateEmployee(employee);
     }
 
-    public ObservableList<Employee>  searchEmployee(Employee employee){
+    public ObservableList<Employee> searchEmployee(Employee employee){
         return Employee.searchEmployee(employee);
     }
 
@@ -50,4 +57,16 @@ public class EmployeeController {
         }
         return result;
     }
+
+    public void raiseForLongTermEmployees(){
+        for (Employee employee1 : employeeQueue){
+            int year = employee1.getYearsWorked();
+            if (year > 2){
+                double salary = employee1.getSalary();
+                employee1.setSalary(salary + 2);
+                Employee.updateEmployee(employee1);
+            }
+        }
+    }
+
 }
