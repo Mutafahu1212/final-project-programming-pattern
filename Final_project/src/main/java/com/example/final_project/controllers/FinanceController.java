@@ -10,7 +10,7 @@ public class FinanceController {
       return finance;
     }
 
-  public void SetProfit(double revenu){
+  public void setProfit(double revenu){
         ItemController itemController=  new ItemController();
         cost = itemController.getTotalItemsCost();
         System.out.println(cost);
@@ -22,7 +22,7 @@ public class FinanceController {
         return finance.getProfit();
   }
   public double getCost(){
-        return cost;
+        return finance.getCost();
   }
 
 

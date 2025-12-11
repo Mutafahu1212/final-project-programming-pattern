@@ -31,7 +31,7 @@ public class FinanceView extends VBox {
         calBtn.setOnAction(event->{
             double revenu = Double.parseDouble(RevenueTf.getText());
 
-            financeController.SetProfit(revenu);
+            financeController.setProfit(revenu);
             double profit = financeController.getProfit();
             profitTf.setText(String.format("%.2f",profit));
             CostTf.setText(String.format("%2f",financeController.getCost()));
