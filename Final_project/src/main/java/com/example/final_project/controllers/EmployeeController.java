@@ -28,7 +28,7 @@ public class EmployeeController {
     public boolean removeEmployee(Employee employee) {
         boolean result = false;
         if(Employee.deleteEmployee(employee)){
-            employeesList.add(employee);
+            employeesList.remove(employee);
             result = true;
         }
         return result;
@@ -36,5 +36,9 @@ public class EmployeeController {
 
     public boolean updateEmployee(Employee employee){
         return Employee.updateEmployee(employee);
+    }
+
+    public ObservableList<Employee>  searchEmployee(Employee employee){
+        return Employee.searchEmployee(employee);
     }
 }
